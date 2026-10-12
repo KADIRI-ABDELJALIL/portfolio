@@ -2,7 +2,7 @@
 const S = window.SITE, P = window.PROJECTS || [];
 const $ = (s, r = document) => r.querySelector(s);
 let lang = "fr";
-try { lang = localStorage.getItem("lang") || (navigator.language || "fr").slice(0, 2); } catch (e) {}
+try { lang = localStorage.getItem("lang") || "fr"; } catch (e) {}
 if (!S.i18n[lang]) lang = "fr";
 const t = k => (S.i18n[lang] || {})[k] || S.i18n.fr[k] || k;
 const L = o => o[lang] || o.fr;
@@ -16,11 +16,11 @@ function chrome() {
       <li><a href="index.html" ${home ? 'aria-current="page"' : ""} data-i18n="nav.home"></a></li>
       <li><a href="projects.html" ${!home ? 'aria-current="page"' : ""} data-i18n="nav.projects"></a></li>
       <li><a href="index.html#contact" data-i18n="nav.contact"></a></li></ul></nav>
-    <button id="lang" type="button" aria-label="Français / English"></button>
+    <div class="langsw" role="group" aria-label="Langue / Language"><button type="button" data-l="fr" lang="fr">FR</button><button type="button" data-l="en" lang="en">EN</button></div>
     <button class="iconbtn" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">☰</button></div>`;
   $("#footer").textContent = `© ${new Date().getFullYear()} ${S.name} — `;
   const f = document.createElement("span"); f.dataset.i18n = "foot"; $("#footer").append(f);
-  $("#lang").onclick = () => setLang(lang === "fr" ? "en" : "fr");
+  document.querySelectorAll(".langsw button").forEach(b => b.onclick = () => setLang(b.dataset.l));
   $("#burger").onclick = e => { const o = $("#nav").classList.toggle("open"); e.currentTarget.setAttribute("aria-expanded", o); };
   $("#nav").onclick = e => { if (e.target.closest("a")) $("#nav").classList.remove("open"); };
 }
@@ -79,7 +79,7 @@ function projects() {
 function applyI18n() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
-  $("#lang").textContent = lang === "fr" ? "EN" : "FR";
+  document.querySelectorAll(".langsw button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
   skills(); featured(); projects(); links();
 }
 function setLang(l) { lang = l; try { localStorage.setItem("lang", l); } catch (e) {} applyI18n(); }

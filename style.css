@@ -17,8 +17,12 @@ header{position:sticky;top:0;z-index:10;background:rgba(10,18,48,.92);backdrop-f
 nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
 nav a{display:block;padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none}
 nav a:hover,nav a[aria-current]{color:var(--accent)}
-.iconbtn,#lang{background:none;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
-#lang:hover,.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.langsw{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.langsw button{background:none;border:0;color:var(--muted);padding:6px 11px;cursor:pointer;font:inherit}
+.langsw button:hover{color:var(--accent)}
+.langsw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:700;cursor:default}
+.iconbtn{background:none;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:6px 12px;cursor:pointer;font:inherit}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
 .iconbtn{display:none}
 main{max-width:var(--max);margin:auto;padding:0 20px}
 section{padding:44px 0;border-top:1px solid var(--line)}
