@@ -48,7 +48,7 @@ function skills() {
 function featured() {
   const el = $("#featured"); if (!el) return;
   const p = P.find(x => x.featured) || P[0]; if (!p) return;
-  el.innerHTML = `<article class="card">${status(p)}<h3>${esc(L(p).title)}</h3><p>${esc(L(p).summary)}</p>
+  el.innerHTML = `<article class="card featured">${status(p)}<h3>${esc(L(p).title)}</h3><p>${esc(L(p).summary)}</p>
     ${chips(p.tech)}<p><a href="projects.html#${p.id}">${t("feat.more")}</a></p></article>`;
 }
 
@@ -56,18 +56,21 @@ function section(title, html) { return html ? `<h3>${t(title)}</h3>${html}` : ""
 
 function projects() {
   const el = $("#projectList"); if (!el) return;
+  let nav = $("#projectNav");
+  if (!nav) { nav = document.createElement("nav"); nav.id = "projectNav"; nav.className = "pnav"; nav.setAttribute("aria-label", "Projets"); el.before(nav); }
+  nav.innerHTML = `<ul class="chips">${P.map(p => `<li><a href="#${p.id}">${esc(L(p).title)}</a></li>`).join("")}</ul>`;
   el.innerHTML = P.map(p => {
     const c = L(p);
-    const steps = p.steps.length ? `<ul class="steps">${p.steps.map(s => `<li>${esc(L(s))} — <small>${t("stp." + s.state)}</small></li>`).join("")}</ul>` : "";
+    const steps = p.steps.length ? `<ul class="steps">${p.steps.map(s => `<li class="s-${s.state}">${esc(L(s))}<small>${t("stp." + s.state)}</small></li>`).join("")}</ul>` : "";
     const res = p.results.length
-      ? `<ul>${p.results.map(r => `<li>${esc(L(r.label))} : <strong>${esc(r.value)}</strong></li>`).join("")}</ul>`
+      ? `<ul class="metrics">${p.results.map(r => `<li><strong>${esc(r.value)}</strong><span>${esc(L(r.label))}</span></li>`).join("")}</ul>`
       : `<p class="note">${esc(c.resultsNote || "")}</p>` + (c.evalPlan.length ? `<p>${t("p.eval")} :</p>${chips(c.evalPlan)}` : "");
     const resFull = p.results.length ? res + (c.resultsNote ? `<p class="note">${esc(c.resultsNote)}</p>` : "") : res;
     const flows = !p.architecture.length ? [] : typeof p.architecture[0] === "string" ? [{ nodes: p.architecture }] : p.architecture;
     const arch = flows.map(f => (f.fr || f.en ? `<p><strong>${esc(L(f))}</strong></p>` : "") + `<ol class="flow">${f.nodes.map(a => `<li>${esc(a)}</li>`).join("")}</ol>`).join("");
-    const imgs = p.images.map(i => `<figure><img src="${esc(i.src)}" alt="${esc(L(i.alt))}" loading="lazy"></figure>`).join("");
+    const imgs = p.images.length ? `<div class="gallery">${p.images.map(i => `<figure><a href="${esc(i.src)}" target="_blank" rel="noopener"><img src="${esc(i.src)}" alt="${esc(L(i.alt))}" loading="lazy"></a><figcaption>${esc(L(i.alt))}</figcaption></figure>`).join("")}</div>` : "";
     const btns = ["github", "demo"].map(k => p.links[k] ? `<a class="btn" href="${esc(p.links[k])}" target="_blank" rel="noopener">${t("p." + k)}</a>` : "").join(" ");
-    return `<article class="project" id="${p.id}" style="border-top:1px solid var(--line)">${status(p)}<h2>${esc(c.title)}</h2><p class="lead">${esc(c.summary)}</p>
+    return `<article class="project" id="${p.id}"><div class="phead">${status(p)}${chips(p.tags || [])}</div><h2>${esc(c.title)}</h2><p class="lead">${esc(c.summary)}</p>
       ${section("p.context", c.context && `<p>${esc(c.context)}</p>`)}
       ${section("p.obj", c.objectives.length && `<ul>${c.objectives.map(o => `<li>${esc(o)}</li>`).join("")}</ul>`)}
       ${section("p.arch", arch)}
@@ -83,7 +86,15 @@ function applyI18n() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll(".langsw button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
-  skills(); featured(); projects(); links();
+  skills(); featured(); projects(); links(); reveal();
+}
+function reveal() {
+  if (!("IntersectionObserver" in window)) return;
+  document.documentElement.classList.add("js");
+  window.__io = window.__io || new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); window.__io.unobserve(e.target); } }), { threshold: 0.08 });
+  document.querySelectorAll("main section:not(.hero), .project, #skills .card, #featured .card").forEach(e => {
+    if (!e.classList.contains("reveal")) { e.classList.add("reveal"); window.__io.observe(e); }
+  });
 }
 function setLang(l) { lang = l; try { localStorage.setItem("lang", l); } catch (e) {} applyI18n(); }
 
