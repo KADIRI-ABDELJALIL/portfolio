@@ -62,15 +62,18 @@ function projects() {
     const res = p.results.length
       ? `<ul>${p.results.map(r => `<li>${esc(L(r.label))} : <strong>${esc(r.value)}</strong></li>`).join("")}</ul>`
       : `<p class="note">${esc(c.resultsNote || "")}</p>` + (c.evalPlan.length ? `<p>${t("p.eval")} :</p>${chips(c.evalPlan)}` : "");
+    const resFull = p.results.length ? res + (c.resultsNote ? `<p class="note">${esc(c.resultsNote)}</p>` : "") : res;
+    const flows = !p.architecture.length ? [] : typeof p.architecture[0] === "string" ? [{ nodes: p.architecture }] : p.architecture;
+    const arch = flows.map(f => (f.fr || f.en ? `<p><strong>${esc(L(f))}</strong></p>` : "") + `<ol class="flow">${f.nodes.map(a => `<li>${esc(a)}</li>`).join("")}</ol>`).join("");
     const imgs = p.images.map(i => `<figure><img src="${esc(i.src)}" alt="${esc(L(i.alt))}" loading="lazy"></figure>`).join("");
     const btns = ["github", "demo"].map(k => p.links[k] ? `<a class="btn" href="${esc(p.links[k])}" target="_blank" rel="noopener">${t("p." + k)}</a>` : "").join(" ");
     return `<article class="project" id="${p.id}" style="border-top:1px solid var(--line)">${status(p)}<h2>${esc(c.title)}</h2><p class="lead">${esc(c.summary)}</p>
       ${section("p.context", c.context && `<p>${esc(c.context)}</p>`)}
       ${section("p.obj", c.objectives.length && `<ul>${c.objectives.map(o => `<li>${esc(o)}</li>`).join("")}</ul>`)}
-      ${section("p.arch", p.architecture.length && `<ol class="flow">${p.architecture.map(a => `<li>${esc(a)}</li>`).join("")}</ol>`)}
+      ${section("p.arch", arch)}
       ${section("p.tech", p.tech.length && chips(p.tech))}
       ${section("p.steps", steps)}
-      ${section("p.results", res)}
+      ${section("p.results", resFull)}
       ${section("p.imgs", imgs)}
       ${btns ? `<p>${btns}</p>` : ""}</article>`;
   }).join("");
