@@ -7,7 +7,7 @@
   --font:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif; --max:1040px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:76px}
+html{scroll-behavior:smooth;scroll-padding-top:76px;overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--text);font:1rem/1.7 var(--font)}
 a{color:var(--accent)}
 ::selection{background:var(--cyan);color:var(--accent-ink)}
