@@ -4,7 +4,7 @@ window.SITE = {
   name: "Abdeljalil Kadiri",
   email: "kadiri.abdeljalil@ensam-casa.com",
   links: {
-    cv: "",        // ex. "assets/cv.pdf" après avoir déposé votre PDF dans le dossier assets
+    cv: "assets/cv.pdf",
     linkedin: "https://www.linkedin.com/in/abdeljalil-kadiri-b08825363",
     github: "https://github.com/KADIRI-ABDELJALIL"
   },

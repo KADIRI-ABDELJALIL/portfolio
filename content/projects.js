@@ -113,9 +113,9 @@ window.PROJECTS = [
       ]
     }],
     images: [
-      { src: "assets/radar-overview.png", alt: { fr: "Vue d'ensemble : architecture et fonctionnement du système", en: "System overview: architecture and operation of the system" } },
-      { src: "assets/radar-dashboard.png", alt: { fr: "Tableau de bord Node-RED : vitesse, plaque et alertes en temps réel", en: "Node-RED dashboard: speed, license plate and real-time alerts" } },
-      { src: "assets/radar-nodered-flow.png", alt: { fr: "Flux Node-RED : réception MQTT, traitement JSON et visualisation", en: "Node-RED flow: MQTT reception, JSON processing and visualization" } }
+      { src: "assets/Radar%20intelligent%20IoT%20_%20vitesse%20et%20plaques.png", alt: { fr: "Vue d'ensemble : architecture et fonctionnement du système", en: "System overview: architecture and operation of the system" } },
+      { src: "assets/Dashbord.jpeg", alt: { fr: "Tableau de bord Node-RED : vitesse, plaque et alertes en temps réel", en: "Node-RED dashboard: speed, license plate and real-time alerts" } },
+      { src: "assets/Node%20red.jpeg", alt: { fr: "Flux Node-RED : réception MQTT, traitement JSON et visualisation", en: "Node-RED flow: MQTT reception, JSON processing and visualization" } }
     ],
     results: [],
     links: { github: "", demo: "" },
