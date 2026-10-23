@@ -86,10 +86,87 @@ window.PROJECTS = [
     ]
   },
   {
-    id: "radar-intelligent",
-    status: "toConfirm", tags: ["Radar"], tech: [], architecture: [], images: [], results: [], links: {},
-    fr: { title: "Radar intelligent", summary: "Fiche à compléter.", context: "", objectives: [], evalPlan: [], resultsNote: "Détails et état réel à confirmer." },
-    en: { title: "Smart radar", summary: "Page to be completed.", context: "", objectives: [], evalPlan: [], resultsNote: "Details and actual status to be confirmed." },
+    id: "smart-iot-radar",
+    status: "done",
+    year: "2024–2025",
+    category: { fr: "Systèmes embarqués / IoT", en: "Embedded Systems / IoT" },
+    tags: ["ESP32", "LoRa", "MQTT", "Node-RED", "OCR", "Firebase"],
+    tech: ["ESP32", "C/C++", "Arduino IDE", "HC-SR04", "LoRa", "MQTT", "Mosquitto", "Node-RED", "OCR", "Firebase", "Python", "Wi-Fi", "HTTP", "IP Webcam"],
+    techGroups: [
+      { fr: "Systèmes embarqués", en: "Embedded Systems", items: ["ESP32", "C/C++", "Arduino IDE", "HC-SR04"] },
+      { fr: "IoT et communication", en: "IoT & Communication", items: ["LoRa (SX127x)", "MQTT", "Mosquitto", "Wi-Fi", "HTTP"] },
+      { fr: "Cloud et traitement d'image", en: "Cloud & Image Processing", items: ["OCR", "Firebase", "Python", "IP Webcam"] },
+      { fr: "Supervision et visualisation", en: "Monitoring & Visualization", items: ["Node-RED"] }
+    ],
+    architecture: [{
+      fr: "Chaîne de traitement de bout en bout", en: "End-to-end workflow",
+      nodes: [
+        { fr: "Détection du véhicule (HC-SR04)", en: "Vehicle detection (HC-SR04)" },
+        { fr: "Estimation de la vitesse", en: "Speed estimation" },
+        { fr: "Seuil dépassé", en: "Threshold exceeded" },
+        { fr: "Capture d'image (caméra IP)", en: "Image capture (IP camera)" },
+        { fr: "OCR dans le cloud", en: "Cloud OCR" },
+        { fr: "Plaque extraite", en: "License plate extracted" },
+        { fr: "Transmission LoRa", en: "LoRa transmission" },
+        { fr: "MQTT", en: "MQTT" },
+        { fr: "Tableau de bord Node-RED", en: "Node-RED dashboard" }
+      ]
+    }],
+    images: [
+      { src: "assets/radar-overview.png", alt: { fr: "Vue d'ensemble : architecture et fonctionnement du système", en: "System overview: architecture and operation of the system" } },
+      { src: "assets/radar-dashboard.png", alt: { fr: "Tableau de bord Node-RED : vitesse, plaque et alertes en temps réel", en: "Node-RED dashboard: speed, license plate and real-time alerts" } },
+      { src: "assets/radar-nodered-flow.png", alt: { fr: "Flux Node-RED : réception MQTT, traitement JSON et visualisation", en: "Node-RED flow: MQTT reception, JSON processing and visualization" } }
+    ],
+    results: [],
+    links: { github: "", demo: "" },
+    fr: {
+      title: "Smart IoT Radar System",
+      subtitle: "Surveillance intelligente du trafic par systèmes embarqués et IoT",
+      summary: "Prototype IoT de surveillance du trafic associant ESP32, LoRa, MQTT, OCR dans le cloud et tableau de bord Node-RED pour détecter automatiquement des excès de vitesse simulés et les superviser en temps réel. Projet académique, ENSAM Casablanca, 2024–2025.",
+      context: "Prototype d'une chaîne automatisée de surveillance du trafic : il détecte des excès de vitesse simulés, identifie le véhicule grâce à sa plaque d'immatriculation et transmet l'événement à une station de supervision distante.",
+      objectives: [
+        "Détecter un dépassement de seuil de vitesse à partir de mesures de distance par capteur ultrasonique (HC-SR04)",
+        "Capturer une image du véhicule et en extraire la plaque par OCR dans le cloud, avec intégration Firebase",
+        "Transmettre les informations entre deux stations par LoRa (modules SX127x)",
+        "Superviser les vitesses, plaques et alertes en temps réel via MQTT et un tableau de bord Node-RED"
+      ],
+      contrib: [
+        "Programmation de l'ESP32 récepteur",
+        "Intégration et configuration du module LoRa récepteur",
+        "Mise en œuvre de la communication MQTT pour la supervision",
+        "Conception et réalisation du tableau de bord Node-RED",
+        "Traitement et visualisation des informations reçues sur les véhicules",
+        "Intégration matérielle et tests de la station de réception"
+      ],
+      contribNote: "Les sous-systèmes de détection de vitesse et d'OCR/cloud ont été développés collectivement par l'équipe du projet.",
+      evalPlan: [],
+      resultsNote: "Prototype de démonstration : aucune précision de détection, portée de communication ou mesure de performance n'est annoncée.",
+      limits: ["Les excès de vitesse sont simulés ; il s'agit d'un prototype académique, non déployé sur route.", "Aucun chiffre de précision, de portée ou de latence n'est revendiqué."]
+    },
+    en: {
+      title: "Smart IoT Radar System",
+      subtitle: "Intelligent Traffic Monitoring Using Embedded Systems & IoT",
+      summary: "Developed an IoT-based traffic monitoring prototype integrating ESP32, LoRa, MQTT, cloud-based OCR, and a Node-RED dashboard for automated speed violation detection and real-time monitoring. Academic project, ENSAM Casablanca, 2024–2025.",
+      context: "A prototype of an automated traffic-monitoring chain: it detects simulated speeding, identifies the vehicle from its license plate, and reports the event to a remote monitoring station.",
+      objectives: [
+        "Detect a speed-threshold violation from ultrasonic distance measurements (HC-SR04)",
+        "Capture a vehicle image and extract the license plate with cloud-based OCR, integrated with Firebase",
+        "Transmit vehicle information between two stations over LoRa (SX127x modules)",
+        "Monitor speeds, plates and alerts in real time through MQTT and a Node-RED dashboard"
+      ],
+      contrib: [
+        "Programmed the ESP32 receiver",
+        "Integrated and configured the LoRa receiver module",
+        "Implemented MQTT communication for monitoring",
+        "Designed and built the Node-RED dashboard",
+        "Processed and visualized the received vehicle information",
+        "Integrated the hardware and tested the receiving station"
+      ],
+      contribNote: "The speed-detection and OCR/cloud subsystems were developed collaboratively by the project team.",
+      evalPlan: [],
+      resultsNote: "Demonstration prototype: no detection accuracy, communication range or performance figures are claimed.",
+      limits: ["Speeding events are simulated; this is an academic prototype, not a road-deployed system.", "No accuracy, range or latency figures are claimed."]
+    },
     steps: []
   },
   {

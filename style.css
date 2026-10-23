@@ -60,7 +60,7 @@ h1{font-size:clamp(2rem,5.2vw,3.3rem);line-height:1.12;margin:0 0 18px;max-width
 .card.featured{border-top-width:1px;border-left:5px solid var(--accent)}
 .status{display:inline-block;font-size:.8rem;padding:2px 11px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-weight:600;background:#fff}
 .status.planned,.status.toConfirm{border-color:var(--muted);color:var(--muted)}
-.pnav{padding:26px 0 6px}.pnav a{color:var(--text);text-decoration:none}.pnav li:hover{border-color:var(--accent)}
+.pnav{padding:30px 0 10px}
 .project{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;margin:0 0 30px;box-shadow:var(--shadow);scroll-margin-top:84px}
 .project h2{margin:12px 0 6px;font-size:1.7rem}.project h2::before{display:none}
 .phead{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -100,3 +100,16 @@ footer{background:var(--navy);color:var(--on-navy-muted);text-align:center;paddi
   .hero{padding:52px 0 44px}.project{padding:20px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .reveal{opacity:1;transform:none;transition:none}}
+
+.pgrid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.pgrid .card h3{margin:10px 0 2px}.pgrid .card p{margin:8px 0}
+.meta{font-size:.85rem;color:var(--muted);margin:0}
+.project h4{margin:16px 0 6px;font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.check{list-style:none;padding:0;margin:0 0 10px}.check li{position:relative;padding:3px 0 3px 26px}.check li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+.gallery a{display:block;cursor:zoom-in;overflow:hidden}.gallery img{transition:transform .35s}.gallery a:hover img{transform:scale(1.03)}
+dialog#lb{border:0;border-radius:12px;padding:12px;max-width:min(96vw,1100px);background:var(--navy);color:var(--on-navy)}
+dialog#lb::backdrop{background:rgba(10,18,48,.82)}
+#lb img{max-width:100%;max-height:78vh;display:block;margin:auto;border-radius:8px}
+#lb p{margin:8px 4px 0;font-size:.9rem;text-align:center}
+#lb button{position:absolute;top:8px;right:10px;width:36px;height:36px;font-size:1.5rem;line-height:1;background:rgba(10,18,48,.75);color:#fff;border:0;border-radius:6px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){.gallery img{transition:none}}
