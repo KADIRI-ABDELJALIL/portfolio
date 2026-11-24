@@ -1,186 +1,72 @@
-if (!window.SITE) {
-  document.body.insertAdjacentHTML("afterbegin", '<p style="background:#b91c1c;color:#fff;padding:12px 16px;margin:0;font:600 15px system-ui">Erreur : le fichier content/site.js est introuvable ou invalide. Vérifiez qu\'il est dans le dossier content du dépôt.</p>');
-  throw new Error("content/site.js manquant");
-}
-/* Navigation, bascule FR/EN, génération des projets depuis content/*.js */
-const S = window.SITE, P = window.PROJECTS || [];
-const $ = (s, r = document) => r.querySelector(s);
-let lang = "fr";
-try { lang = localStorage.getItem("lang") || "fr"; } catch (e) {}
-if (!S.i18n[lang]) lang = "fr";
-const t = k => (S.i18n[lang] || {})[k] || S.i18n.fr[k] || k;
-const L = o => o[lang] || o.fr;
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const page = document.body.dataset.page;
-
-function chrome() {
-  const home = page === "home";
-  $("#header").innerHTML = `<div class="bar"><a class="logo" href="index.html">${esc(S.name)}</a>
-    <nav id="nav" aria-label="Menu"><ul>
-      <li><a href="index.html" ${home ? 'aria-current="page"' : ""} data-i18n="nav.home"></a></li>
-      <li><a href="projects.html" ${!home ? 'aria-current="page"' : ""} data-i18n="nav.projects"></a></li>
-      <li><a href="index.html#contact" data-i18n="nav.contact"></a></li></ul></nav>
-    <div class="langsw" role="group" aria-label="Langue / Language"><button type="button" data-l="fr" lang="fr">FR</button><button type="button" data-l="en" lang="en">EN</button></div>
-    <button class="iconbtn" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">☰</button></div>`;
-  $("#footer").textContent = `© ${new Date().getFullYear()} ${S.name} — `;
-  const f = document.createElement("span"); f.dataset.i18n = "foot"; $("#footer").append(f);
-  document.querySelectorAll(".langsw button").forEach(b => b.onclick = () => setLang(b.dataset.l));
-  $("#burger").onclick = e => { const o = $("#nav").classList.toggle("open"); e.currentTarget.setAttribute("aria-expanded", o); };
-  $("#nav").onclick = e => { if (e.target.closest("a")) $("#nav").classList.remove("open"); };
-}
-
-function links() {
-  document.querySelectorAll("[data-link]").forEach(a => {
-    const url = S.links[a.dataset.link];
-    if (url) { a.href = url; a.classList.remove("pending"); a.removeAttribute("aria-disabled");
-      if (/^https?:/.test(url)) { a.target = "_blank"; a.rel = "noopener"; }
-      if (a.dataset.link === "cv") a.setAttribute("download", ""); }
-    else { a.removeAttribute("href"); a.classList.add("pending"); a.setAttribute("aria-disabled", "true"); a.dataset.pending = t("pending"); }
-  });
-  const m = "mailto:" + S.email;
-  if ($("#mailLink")) { $("#mailLink").href = m; $("#mailLink").textContent = S.email; $("#mailBtn").href = m; }
-}
-
-const status = p => `<span class="status ${p.status}">${t("st." + p.status)}</span>`;
-const chips = a => `<ul class="chips">${a.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
-
-function skills() {
-  if (!$("#skills")) return;
-  $("#skills").innerHTML = S.skills.map(g => `<div class="card"><h3>${esc(L(g))}</h3>${chips(g.items)}</div>`).join("");
-}
-
-function featured() {
-  const el = $("#featured"); if (!el) return;
-  const p = P.find(x => x.featured) || P[0]; if (!p) return;
-  el.innerHTML = `<article class="card featured">${status(p)}<h3>${esc(L(p).title)}</h3><p>${esc(L(p).summary)}</p>
-    ${chips(p.tech)}<p><a href="projects.html#${p.id}">${t("feat.more")}</a></p></article>`;
-}
-
-function section(title, html) { return html ? `<h3>${t(title)}</h3>${html}` : ""; }
-
-function projects() {
-  const el = $("#projectList"); if (!el) return;
-  let nav = $("#projectNav");
-  if (!nav) { nav = document.createElement("nav"); nav.id = "projectNav"; nav.className = "pnav"; nav.setAttribute("aria-label", "Projets"); el.before(nav); }
-  nav.innerHTML = `<div class="pgrid">${P.map(p => { const c = L(p); return `<article class="card"><div class="phead">${status(p)}${p.year ? `<span class="meta">${esc(p.year)}</span>` : ""}</div><h3>${esc(c.title)}</h3>${p.category ? `<p class="meta">${esc(L(p.category))}</p>` : ""}<p>${esc(c.subtitle || c.summary)}</p>${chips(p.tags || [])}<p><a class="btn" href="#${p.id}">${t("p.view")}</a></p></article>`; }).join("")}</div>`;
-  const nd = a => esc(typeof a === "string" ? a : L(a));
-  const ul = (a, cls) => a && a.length ? `<ul${cls ? ` class="${cls}"` : ""}>${a.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
-  el.innerHTML = P.map(p => {
-    const c = L(p);
-    const steps = p.steps.length ? `<ul class="steps">${p.steps.map(s => `<li class="s-${s.state}">${esc(L(s))}<small>${t("stp." + s.state)}</small></li>`).join("")}</ul>` : "";
-    const lim = c.limits && c.limits.length ? `<h4>${t("p.limits")}</h4>${ul(c.limits)}` : "";
-    const res = p.results.length
-      ? `<ul class="metrics">${p.results.map(r => `<li><strong>${esc(r.value)}</strong><span>${esc(L(r.label))}</span></li>`).join("")}</ul>` + (c.resultsNote ? `<p class="note">${esc(c.resultsNote)}</p>` : "")
-      : `<p class="note">${esc(c.resultsNote || "")}</p>` + (c.evalPlan.length ? `<p>${t("p.eval")} :</p>${chips(c.evalPlan)}` : "");
-    const flows = !p.architecture.length ? [] : typeof p.architecture[0] === "string" ? [{ nodes: p.architecture }] : p.architecture;
-    const arch = flows.map(f => (f.fr || f.en ? `<p><strong>${esc(L(f))}</strong></p>` : "") + `<ol class="flow">${f.nodes.map(a => `<li>${nd(a)}</li>`).join("")}</ol>`).join("");
-    const tech = p.techGroups ? p.techGroups.map(g => `<h4>${esc(L(g))}</h4>${chips(g.items)}`).join("") : (p.tech.length ? chips(p.tech) : "");
-    const contrib = c.contrib && c.contrib.length ? ul(c.contrib, "check") + (c.contribNote ? `<p class="note">${esc(c.contribNote)}</p>` : "") : "";
-    const imgs = p.images.length ? `<div class="gallery">${p.images.map(i => `<figure><a href="${esc(i.src)}"><img src="${esc(i.src)}" alt="${esc(L(i.alt))}" loading="lazy"></a><figcaption>${esc(L(i.alt))}</figcaption></figure>`).join("")}</div>` : "";
-    const btns = ["github", "demo"].map(k => p.links[k] ? `<a class="btn" href="${esc(p.links[k])}" target="_blank" rel="noopener">${t("p." + k)}</a>` : "").join(" ");
-    return `<article class="project" id="${p.id}"><div class="phead">${status(p)}${p.year ? `<span class="meta">${esc(p.year)}</span>` : ""}${chips(p.tags || [])}</div><h2>${esc(c.title)}</h2>${c.subtitle ? `<p class="meta">${esc(c.subtitle)}</p>` : ""}<p class="lead">${esc(c.summary)}</p>
-      ${section("p.context", c.context && `<p>${esc(c.context)}</p>`)}
-      ${section("p.obj", ul(c.objectives))}
-      ${section("p.arch", arch)}
-      ${section("p.tech", tech)}
-      ${section("p.contrib", contrib)}
-      ${section("p.steps", steps)}
-      ${section("p.imgs", imgs)}
-      ${section("p.results", res + lim)}
-      ${btns ? `<p>${btns}</p>` : ""}</article>`;
-  }).join("");
-}
-
-function applyI18n() {
-  document.documentElement.lang = lang;
-  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
-  document.querySelectorAll(".langsw button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
-  skills(); featured(); projects(); links(); reveal(); marquee(); stats(); typed(); dots(); onScroll();
-}
-function reveal() {
-  if (!("IntersectionObserver" in window)) return;
-  document.documentElement.classList.add("js");
-  window.__io = window.__io || new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); window.__io.unobserve(e.target); } }), { threshold: 0.08 });
-  document.querySelectorAll("main section:not(.hero), .project, #skills .card, #featured .card, .chips.big li, .pgrid .card").forEach(e => {
-    if (!e.classList.contains("reveal")) { e.classList.add("reveal"); e.style.setProperty("--i", [...e.parentNode.children].indexOf(e)); window.__io.observe(e); }
-  });
-}
-function setLang(l) { lang = l; try { localStorage.setItem("lang", l); } catch (e) {} applyI18n(); }
-
-/* ---- Effets dynamiques (animations) ---- */
-const RM = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)").matches : false;
-function techList() { const s = new Set(); P.forEach(p => [...(p.tech || []), ...(p.techGroups || []).flatMap(g => g.items)].forEach(x => s.add(x))); return [...s]; }
-function marquee() { const m = $("#marquee"); if (!m) return; const l = techList().map(x => `<span>${esc(x)}</span>`).join(""); m.innerHTML = l + l; }
-function stats() {
-  const v = { projects: P.filter(p => p.status !== "toConfirm").length, tech: techList().length, areas: document.querySelectorAll(".chips.big li").length };
-  document.querySelectorAll("[data-count]").forEach(e => {
-    const to = v[e.dataset.count] || 0; if (RM) { e.textContent = to; return; }
-    const t0 = performance.now();
-    (function f(n) { const k = Math.min(1, (n - t0) / 1100); e.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
-  });
-}
-let typedTimer;
-function typed() {
-  const el = $("#typed"); if (!el) return; clearTimeout(typedTimer);
-  const words = [1, 2, 3, 4, 5, 6, 7].map(i => t("int." + i)); let w = 0, c = 0, del = false;
-  if (RM) { el.textContent = words[0]; return; }
-  (function tick() {
-    const word = words[w]; c += del ? -1 : 1; el.textContent = word.slice(0, c);
-    let d = del ? 28 : 55;
-    if (!del && c === word.length) { del = true; d = 1400; } else if (del && c === 0) { del = false; w = (w + 1) % words.length; d = 350; }
-    typedTimer = setTimeout(tick, d);
-  })();
-}
-function dots() {
-  const nav = $("#dots"); if (!nav) return;
-  nav.innerHTML = [...document.querySelectorAll("main section[data-sec]")].map(s => `<a href="#${s.id}" aria-label="${esc($("h2 span:last-child", s).textContent)}"><span>${esc($("h2 span:last-child", s).textContent)}</span></a>`).join("");
-}
-function onScroll() {
-  const h = document.documentElement, p = $("#progress");
-  if (p) p.style.transform = `scaleX(${h.scrollTop / ((h.scrollHeight - h.clientHeight) || 1)})`;
-  let cur = null; document.querySelectorAll("main section[data-sec]").forEach(s => { if (s.getBoundingClientRect().top < innerHeight * 0.4) cur = s.id; });
-  document.querySelectorAll("#dots a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + cur));
-}
-function net() {
-  const cv = $("#net"); if (!cv || RM) return;
-  const x = cv.getContext && cv.getContext("2d"); if (!x || !("IntersectionObserver" in window)) return;
-  let W, H, pts = [], on = true; const m = { x: -999, y: -999 };
-  const size = () => { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; pts = Array.from({ length: Math.min(70, Math.round(W * H / 16000)) }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4 })); };
-  size(); addEventListener("resize", size);
-  cv.parentNode.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); m.x = e.clientX - r.left; m.y = e.clientY - r.top; });
-  new IntersectionObserver(es => { on = es[0].isIntersecting; }).observe(cv);
-  const line = (a, b, c, al) => { x.strokeStyle = `rgba(34,211,238,${al})`; x.beginPath(); x.moveTo(a, b); x.lineTo(c.x, c.y); x.stroke(); };
-  (function draw() {
-    requestAnimationFrame(draw); if (!on || document.hidden) return; x.clearRect(0, 0, W, H);
-    pts.forEach((p, i) => {
-      p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
-      x.fillStyle = "rgba(34,211,238,.8)"; x.beginPath(); x.arc(p.x, p.y, 1.8, 0, 6.3); x.fill();
-      for (let k = i + 1; k < pts.length; k++) { const q = pts[k], d = Math.hypot(p.x - q.x, p.y - q.y); if (d < 120) line(p.x, p.y, q, 0.22 * (1 - d / 120)); }
-      const dm = Math.hypot(p.x - m.x, p.y - m.y); if (dm < 150) line(p.x, p.y, m, 0.5 * (1 - dm / 150));
-    });
-  })();
-}
-addEventListener("scroll", onScroll, { passive: true });
-document.addEventListener("pointermove", e => {
-  const c = e.target.closest && e.target.closest(".card, .project"); if (!c) return;
-  const r = c.getBoundingClientRect(); c.style.setProperty("--mx", (e.clientX - r.left) + "px"); c.style.setProperty("--my", (e.clientY - r.top) + "px");
-});
-
-const X = {
-  fr: { "p.contrib": "Ma contribution", "p.limits": "Limites", "p.view": "Voir le projet", "p.arch": "Architecture et fonctionnement", "lb.close": "Fermer" },
-  en: { "p.contrib": "My contribution", "p.limits": "Limitations", "p.view": "View project", "p.arch": "Architecture and how it works", "lb.close": "Close" }
+const S=window.SITE,P=window.PROJECTS,page=document.body.dataset.page,app=document.getElementById("app");
+let lang="fr";try{lang=localStorage.getItem("lang")||"fr"}catch(e){}
+const L=p=>p?p[lang==="fr"?0:1]:"";
+const UI={
+home:["Accueil","Home"],projects:["Projets","Projects"],contact:["Contact","Contact"],
+see:["Voir les projets","View projects"],cv:["Mon CV","My CV"],cvSoon:["CV bientôt disponible","CV coming soon"],
+about:["Profil","Profile"],ints:["Domaines d'intérêt","Areas of interest"],feat:["Projets","Projects"],all:["Tous les projets","All projects"],
+skills:["Compétences techniques","Technical skills"],ctaT:["À la recherche d'un PFE","Looking for a final-year project"],
+ctaP:["Je recherche un projet de fin d'études en IoT industriel, Edge AI ou Industrie 4.0. Échangeons.","I am looking for a final-year project in industrial IoT, Edge AI or Industry 4.0. Let's talk."],
+more:["Voir le projet →","View project →"],back:["← Tous les projets","← All projects"],
+ctx:["Contexte et problématique","Context and problem"],goals:["Objectifs","Objectives"],featT:["Fonctionnalités","Features"],
+arch:["Architecture technique","Technical architecture"],tech:["Technologies","Technologies"],steps:["Étapes de réalisation","Implementation steps"],
+res:["Résultats","Results"],planned:["Mesures envisagées","Planned measurements"],noRes:["Aucun résultat mesuré publié pour l'instant.","No measured result published yet."],
+gal:["Images et schémas","Images and diagrams"],addImg:["Image à ajouter dans","Image to add in"],
+platform:["Ouvrir la plateforme ↗","Open the platform ↗"],github:["Code sur GitHub ↗","Code on GitHub ↗"],demo:["Démonstration ↗","Demo ↗"],
+prev:["← Précédent","← Previous"],next:["Suivant →","Next →"],nf:["Projet introuvable.","Project not found."],
+done:["Terminé","Done"],progress:["En cours","In progress"],todo:["À faire","To do"],demoS:["Prototype en ligne","Live prototype"],tbc:["État à confirmer","Status to be confirmed"]
 };
-Object.keys(X).forEach(l => Object.assign(S.i18n[l], X[l]));
-document.addEventListener("click", e => {
-  const a = e.target.closest(".gallery a"); if (!a) return;
-  e.preventDefault();
-  let d = $("#lb");
-  if (!d) { d = document.createElement("dialog"); d.id = "lb"; d.innerHTML = '<button type="button">×</button><img alt=""><p></p>'; document.body.append(d); d.addEventListener("click", () => d.close()); }
-  if (typeof d.showModal !== "function") { window.open(a.href, "_blank", "noopener"); return; }
-  const im = $("img", a); $("img", d).src = a.href; $("img", d).alt = im.alt; $("p", d).textContent = im.alt;
-  $("button", d).setAttribute("aria-label", t("lb.close")); d.showModal();
-});
+const U=k=>L(UI[k]);const stl=s=>U(s==="demo"?"demoS":s);
+const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const btn=(h,t,c="")=>h?`<a class="b ${c}" href="${e(h)}" target="${h.startsWith("http")?"_blank":"_self"}" rel="noopener">${t}</a>`:"";
+const chips=a=>`<div class="chips">${a.map(x=>`<span class="chip">${e(Array.isArray(x)?L(x):x)}</span>`).join("")}</div>`;
+const card=(p,i,big)=>`<a class="card rv ${big?"big":""}" href="project.html?id=${p.id}"><div class="cv">${String(i+1).padStart(2,"0")}${p.cover?`<img src="${e(p.cover)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div><div class="t"><span class="st ${p.status}">${stl(p.status)}</span><h3>${e(L(p.title))}</h3><p class="m">${e(L(p.tag))}</p>${chips((p.tech||[]).slice(0,4))}<span class="more">${U("more")}</span></div></a>`;
+const head=()=>`<div id="bar"></div><header><div class="w"><a class="logo" href="index.html">&lt;AK/&gt;</a><nav id="nav"><a href="index.html" class="${page==="home"?"on":""}">${U("home")}</a><a href="projects.html" class="${page!=="home"?"on":""}">${U("projects")}</a><a href="index.html#contact">${U("contact")}</a></nav><button class="b s" id="lang" aria-label="Language">${lang==="fr"?"EN":"FR"}</button><button class="b s" id="burger" aria-label="Menu" aria-expanded="false">☰</button></div></header>`;
+const foot=()=>`<footer><div class="w">© ${new Date().getFullYear()} ${S.name} · ENSAM Casablanca</div></footer><div id="lb"><img alt=""></div>`;
+const social=()=>`<div class="row">${btn(S.links.linkedin,"LinkedIn")}${btn(S.links.github,"GitHub")}${S.links.cv?btn(S.links.cv,U("cv")):`<span class="b d">${U("cvSoon")}</span>`}${btn("mailto:"+S.email,S.email)}</div>`;
 
-chrome(); applyI18n();
-if (location.hash) { const h = document.getElementById(location.hash.slice(1)); if (h) h.scrollIntoView(); }
-net();
+function home(){return `<section class="hero"><canvas id="net"></canvas><div class="w"><span class="k">ENSAM Casablanca · MSEI · SIC</span><h1>${S.name.split(" ")[0]} <span>${S.name.split(" ")[1]}</span></h1><div class="role" id="role"></div><p>${L(S.bio)}</p><div class="row">${btn("projects.html",U("see"),"f")}${btn("#contact",U("contact"))}</div></div></section>
+<section id="about"><div class="w rv"><span class="k">${U("about")}</span><h2>${U("ints")}</h2><div class="ints">${S.interests.map(x=>`<div>${L(x)}</div>`).join("")}</div></div></section>
+<section id="work" style="background:var(--bg2)"><div class="w"><span class="k">${U("feat")}</span><h2>${U("all")}</h2><br><div class="grid">${P.map((p,i)=>card(p,i,i===0)).join("")}</div></div></section>
+<section><div class="w rv"><span class="k">${U("skills")}</span><div class="sk">${S.skills.map(g=>`<div><h3>${L(g.n)}</h3>${chips(g.i)}</div>`).join("")}</div></div></section>
+<section><div class="w"><div class="cta rv"><h2>${U("ctaT")}</h2><p class="m">${U("ctaP")}</p>${btn("mailto:"+S.email,S.email,"f")}</div></div></section>
+<section id="contact"><div class="w rv"><span class="k">${U("contact")}</span><h2>${S.email}</h2><br>${social()}</div></section>`}
+
+function projects(){const sts=[...new Set(P.map(p=>p.status))];
+return `<div class="w ph"><span class="k">${U("projects")}</span><h1>${U("all")}</h1><div class="flt" id="flt"><button class="b s f" data-s="all">${U("all")}</button>${sts.map(s=>`<button class="b s" data-s="${s}">${stl(s)}</button>`).join("")}</div><div class="grid" id="pl">${P.map((p,i)=>card(p,i)).join("")}</div></div>`}
+
+function project(){const id=new URLSearchParams(location.search).get("id"),i=P.findIndex(p=>p.id===id),p=P[i];
+if(!p)return `<div class="w ph"><p>${U("nf")}</p>${btn("projects.html",U("back"))}</div>`;
+document.title=L(p.title)+" — "+S.name;const k=p.links||{},sec=(t,b)=>b?`<div class="rv"><h2>${t}</h2>${b}</div>`:"";
+const li=a=>`<ul class="l">${a.map(x=>`<li>${e(L(x))}</li>`).join("")}</ul>`;
+const imgs=(p.images||[]).length?(p.images.map(m=>`<figure><img src="${e(m.src)}" alt="${e(L(m.alt))}" loading="lazy">${m.alt?`<figcaption>${e(L(m.alt))}</figcaption>`:""}</figure>`).join("")):`<div class="empty">${U("addImg")}<br><code>assets/images/${p.id}/</code></div>`;
+const n=P[(i+1)%P.length],pv=P[(i-1+P.length)%P.length];
+return `<div class="w ph"><a class="m" href="projects.html">${U("back")}</a><br><br><span class="st ${p.status}">${stl(p.status)}</span><h1>${e(L(p.title))}</h1><p class="m">${e(L(p.tag))}</p><br><div class="row">${btn(k.platform,U("platform"),"f")}${btn(k.github,U("github"))}${btn(k.demo,U("demo"))}</div></div>
+<div class="w pg" style="padding-bottom:4rem"><div class="gal rv">${imgs}</div>
+${sec(U("ctx"),`<p>${e(L(p.context))}</p>`+(p.role?`<br><p><strong>${e(L(p.role))}</strong></p>`:""))}
+${sec(U("goals"),p.goals&&li(p.goals))}${sec(U("featT"),p.feat&&li(p.feat))}
+${sec(U("arch"),p.arch&&`<div class="flow">${p.arch.map((a,j)=>(j?"<i>→</i>":"")+`<span>${e(L(a))}</span>`).join("")}</div>`)}
+${sec(U("tech"),p.tech&&p.tech.length&&chips(p.tech))}
+${sec(U("steps"),p.steps&&p.steps.length&&`<ul class="tl">${p.steps.map(s=>`<li class="${s[0]}">${e(L(s[1]))}<small>${U(s[0])}</small></li>`).join("")}</ul>`)}
+${sec(U("res"),(p.results&&p.results.length?li(p.results):`<p class="m">${U("noRes")}</p>`)+(p.planned?`<br><h3 class="m" style="font-size:1rem">${U("planned")}</h3><br>${chips(p.planned)}`:"")+(p.note?`<br><p class="note">${e(L(p.note))}</p>`:""))}
+<div class="pn"><a class="b" href="project.html?id=${pv.id}">${U("prev")}</a><a class="b" href="project.html?id=${n.id}">${U("next")}</a></div></div>`}
+
+let raf,tm;
+function net(){const c=document.getElementById("net");cancelAnimationFrame(raf);if(!c||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+const x=c.getContext("2d");let w,h,pt;const init=()=>{w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;pt=Array.from({length:Math.min(70,w/18|0)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))};init();onresize=init;
+(function f(){x.clearRect(0,0,w,h);pt.forEach((p,i)=>{p.x=(p.x+p.vx+w)%w;p.y=(p.y+p.vy+h)%h;x.fillStyle="rgba(34,211,238,.7)";x.fillRect(p.x,p.y,2,2);for(let j=i+1;j<pt.length;j++){const q=pt[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<120){x.strokeStyle="rgba(34,211,238,"+.2*(1-d/120)+")";x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});raf=requestAnimationFrame(f)})()}
+function type(){const r=document.getElementById("role");clearTimeout(tm);if(!r)return;let i=0,j=0,del=false;
+(function s(){const t=L(S.roles[i]);j+=del?-1:1;r.textContent=t.slice(0,j);let d=del?40:80;if(!del&&j===t.length){del=true;d=1400}else if(del&&j===0){del=false;i=(i+1)%S.roles.length;d=300}tm=setTimeout(s,d)})()}
+
+function render(){document.documentElement.lang=lang;app.innerHTML=head()+"<main>"+({home,projects,project}[page]())+"</main>"+foot();
+if(page==="home"){document.title=S.name+" — Portfolio";net();type()}if(page==="projects")document.title=U("projects")+" — "+S.name;
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.1});
+document.querySelectorAll(".rv").forEach(x=>io.observe(x));
+document.getElementById("lang").onclick=()=>{lang=lang==="fr"?"en":"fr";try{localStorage.setItem("lang",lang)}catch(e){}render()};
+const nv=document.getElementById("nav"),bg=document.getElementById("burger");bg.onclick=()=>{bg.setAttribute("aria-expanded",nv.classList.toggle("o"))};nv.onclick=()=>nv.classList.remove("o");
+const f=document.getElementById("flt");if(f)f.onclick=ev=>{const b=ev.target.closest("button");if(!b)return;f.querySelectorAll("button").forEach(x=>x.classList.toggle("f",x===b));
+document.querySelectorAll("#pl .card").forEach((c,i)=>c.style.display=b.dataset.s==="all"||P[i].status===b.dataset.s?"":"none")};
+const lb=document.getElementById("lb");document.querySelectorAll(".gal img").forEach(m=>m.onclick=()=>{lb.firstChild.src=m.src;lb.classList.add("o")});lb.onclick=()=>lb.classList.remove("o")}
+addEventListener("scroll",()=>{const b=document.getElementById("bar");if(b)b.style.width=scrollY/(document.documentElement.scrollHeight-innerHeight||1)*100+"%"},{passive:true});
+document.addEventListener("pointermove",ev=>{const c=ev.target.closest&&ev.target.closest(".card");if(c){const r=c.getBoundingClientRect();c.style.setProperty("--mx",ev.clientX-r.left+"px");c.style.setProperty("--my",ev.clientY-r.top+"px")}});
+render();

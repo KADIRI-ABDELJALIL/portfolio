@@ -1,286 +1,60 @@
-/* ===== PROJETS — pour en ajouter un : copiez un bloc { ... } et modifiez-le =====
-   status : "progress" | "planned" | "done" | "toConfirm"
-   steps[].state : "done" | "progress" | "todo"
-   results : [{label:{fr,en}, value:"..."}] — ne mettre que des mesures réelles.
-   images : [{src:"assets/schema.png", alt:{fr:"...", en:"..."}}] */
-window.PROJECTS = [
-  {
-    id: "ccps-lab-assistant",
-    featured: true,
-    status: "progress",
-    tags: ["Edge AI", "LLM", "RAG"],
-    tech: ["Raspberry Pi 5 (16 Go)", "Ollama", "Open WebUI", "Gemma 3 4B (quantifié)", "RAG"],
-    architecture: ["Documentation du laboratoire", "Collections RAG", "Open WebUI", "Ollama + Gemma 3 4B", "Raspberry Pi 5"],
-    images: [],
-    results: [],
-    links: { github: "", demo: "" },
-    fr: {
-      title: "CCPS Lab Assistant",
-      summary: "Assistant IA local, hors ligne, pour retrouver l'information dans la documentation du laboratoire CCPS (ENSAM Casablanca).",
-      context: "Les utilisateurs du laboratoire doivent retrouver rapidement des informations dans une documentation technique, parfois avec une connexion Internet limitée.",
-      objectives: ["Répondre aux questions à partir de la documentation du laboratoire", "Fonctionner localement, sans dépendre du cloud", "Explorer une approche Edge AI sur Raspberry Pi 5"],
-      evalPlan: ["Qualité des réponses", "Latence", "Utilisation de la RAM", "Utilisation du CPU", "Température du Raspberry Pi", "Comparaison entre plateformes (si mesures disponibles)"],
-      resultsNote: "Projet en développement et en cours d'évaluation : aucune mesure n'est publiée pour l'instant."
-    },
-    en: {
-      title: "CCPS Lab Assistant",
-      summary: "Local, offline AI assistant to find information in the CCPS laboratory documentation (ENSAM Casablanca).",
-      context: "Lab users need to quickly find information in technical documentation, sometimes with limited Internet access.",
-      objectives: ["Answer questions from the laboratory documentation", "Run locally, without relying on the cloud", "Explore an Edge AI approach on Raspberry Pi 5"],
-      evalPlan: ["Answer quality", "Latency", "RAM usage", "CPU usage", "Raspberry Pi temperature", "Comparison across platforms (when measurements are available)"],
-      resultsNote: "Project under development and evaluation: no measurements are published yet."
-    },
-    steps: [
-      { state: "progress", fr: "Mise en place de la pile locale (Raspberry Pi 5, Ollama, Open WebUI, Gemma 3 4B)", en: "Setting up the local stack (Raspberry Pi 5, Ollama, Open WebUI, Gemma 3 4B)" },
-      { state: "progress", fr: "Organisation de la documentation en collections RAG", en: "Organizing documentation into RAG collections" },
-      { state: "todo", fr: "Évaluation : qualité, latence, RAM, CPU, température", en: "Evaluation: quality, latency, RAM, CPU, temperature" }
-    ]
-  },
-  {
-    id: "lorawan-edge-ai",
-    status: "done",
-    tags: ["LoRaWAN", "Edge AI", "TinyML", "Maintenance prédictive"],
-    tech: ["ESP32", "Module LoRa RF96 (868 MHz)", "Capteur DHT11", "Passerelle LoRaWAN", "ChirpStack", "Node-RED", "Raspberry Pi 3", "Flask", "TensorFlow / TensorFlow Lite (INT8)"],
-    architecture: [
-      { fr: "Télémétrie LoRaWAN", en: "LoRaWAN telemetry", nodes: ["ESP32 + DHT11 + RF96", "Gateway LoRaWAN", "ChirpStack", "Node-RED dashboard"] },
-      { fr: "Maintenance prédictive (Edge AI)", en: "Predictive maintenance (Edge AI)", nodes: ["ESP32 : séquence de 10 mesures", "Wi-Fi (HTTP POST, JSON)", "Raspberry Pi 3 : Flask + TFLite", "État + durée de vie restante", "Trame LoRa de 3 octets"] }
-    ],
-    images: [],
-    results: [
-      { label: { fr: "Latence d'inférence du modèle sur Raspberry Pi 3 (journaux du serveur)", en: "Model inference latency on Raspberry Pi 3 (server logs)" }, value: "1 – 3 ms" }
-    ],
-    links: { github: "", demo: "" },
-    fr: {
-      title: "IoT industriel : télémétrie LoRaWAN et maintenance prédictive Edge AI",
-      summary: "Système IoT hybride : télémétrie LoRaWAN (ESP32, ChirpStack, Node-RED) et estimation de l'état de santé d'un équipement par une IA embarquée sur Raspberry Pi. Projet métier ENSAM Casablanca, réalisé en équipe, mars à mai 2026.",
-      context: "Surveiller des équipements industriels demande de faire communiquer des capteurs sur de longues distances avec peu d'énergie, et d'analyser localement des données volumineuses comme les vibrations, sans dépendre du Cloud (latence, bande passante, sécurité).",
-      objectives: [
-        "Concevoir un nœud capteur autonome transmettant température et humidité en LoRaWAN vers ChirpStack et Node-RED (trame de 2 octets)",
-        "Estimer l'état d'un équipement (NORMAL, WARNING, DANGER) et sa durée de vie restante avec un modèle embarqué sur Raspberry Pi",
-        "Ne transmettre par LoRa que le résultat de l'analyse (trame de 3 octets) pour respecter les contraintes de bande passante et de temps d'émission"
-      ],
-      evalPlan: [],
-      resultsNote: "Température et humidité sont mesurées par un vrai capteur. Les variables de vibration, de régime moteur et de durée de fonctionnement sont simulées côté ESP32 : la validation porte sur toute la chaîne (acquisition, inférence, transmission), pas sur la détection de défauts réels. Aucune précision de classification n'est publiée."
-    },
-    en: {
-      title: "Industrial IoT: LoRaWAN telemetry and Edge AI predictive maintenance",
-      summary: "Hybrid IoT system: LoRaWAN telemetry (ESP32, ChirpStack, Node-RED) and equipment health estimation with embedded AI on a Raspberry Pi. ENSAM Casablanca team project, March to May 2026.",
-      context: "Monitoring industrial equipment requires long-range, low-power sensor communication, and local analysis of high-volume data such as vibrations, without relying on the Cloud (latency, bandwidth, security).",
-      objectives: [
-        "Design an autonomous sensor node sending temperature and humidity over LoRaWAN to ChirpStack and Node-RED (2-byte frame)",
-        "Estimate equipment state (NORMAL, WARNING, DANGER) and remaining useful life with a model embedded on a Raspberry Pi",
-        "Send only the analysis result over LoRa (3-byte frame) to respect bandwidth and airtime constraints"
-      ],
-      evalPlan: [],
-      resultsNote: "Temperature and humidity come from a real sensor. Vibration, motor speed and runtime are simulated on the ESP32: the validation covers the whole chain (acquisition, inference, transmission), not real fault detection. No classification accuracy is published."
-    },
-    steps: [
-      { state: "done", fr: "Cahier des charges et architecture hybride en deux flux", en: "Requirements and two-flow hybrid architecture" },
-      { state: "done", fr: "Nœud de télémétrie : ESP32, module LoRa RF96, capteur DHT11, alimentation sur batterie", en: "Telemetry node: ESP32, RF96 LoRa module, DHT11 sensor, battery power" },
-      { state: "done", fr: "Passerelle LoRaWAN et serveur ChirpStack configurés (activation ABP), tableau de bord Node-RED", en: "LoRaWAN gateway and ChirpStack server configured (ABP activation), Node-RED dashboard" },
-      { state: "done", fr: "Modèle Conv1D d'environ 30 000 paramètres entraîné sur 40 000 échantillons, converti en TensorFlow Lite INT8", en: "Conv1D model of about 30,000 parameters trained on 40,000 samples, converted to TensorFlow Lite INT8" },
-      { state: "done", fr: "API Flask sur Raspberry Pi 3 et liaison ESP32 vers Raspberry Pi en Wi-Fi", en: "Flask API on Raspberry Pi 3 and ESP32-to-Raspberry Pi Wi-Fi link" },
-      { state: "done", fr: "Retransmission du résultat par LoRa (état + durée de vie restante)", en: "Result relayed over LoRa (state + remaining useful life)" },
-      { state: "todo", fr: "Capteurs de vibration réels (accéléromètre) à la place des données simulées", en: "Real vibration sensors (accelerometer) instead of simulated data" },
-      { state: "todo", fr: "Activation OTAA et exécution du modèle directement sur l'ESP32 (TinyML)", en: "OTAA activation and running the model directly on the ESP32 (TinyML)" }
-    ]
-  },
-  {
-    id: "smart-iot-radar",
-    status: "done",
-    year: "2024–2025",
-    category: { fr: "Systèmes embarqués / IoT", en: "Embedded Systems / IoT" },
-    tags: ["ESP32", "LoRa", "MQTT", "Node-RED", "OCR", "Firebase"],
-    tech: ["ESP32", "C/C++", "Arduino IDE", "HC-SR04", "LoRa", "MQTT", "Mosquitto", "Node-RED", "OCR", "Firebase", "Python", "Wi-Fi", "HTTP", "IP Webcam"],
-    techGroups: [
-      { fr: "Systèmes embarqués", en: "Embedded Systems", items: ["ESP32", "C/C++", "Arduino IDE", "HC-SR04"] },
-      { fr: "IoT et communication", en: "IoT & Communication", items: ["LoRa (SX127x)", "MQTT", "Mosquitto", "Wi-Fi", "HTTP"] },
-      { fr: "Cloud et traitement d'image", en: "Cloud & Image Processing", items: ["OCR", "Firebase", "Python", "IP Webcam"] },
-      { fr: "Supervision et visualisation", en: "Monitoring & Visualization", items: ["Node-RED"] }
-    ],
-    architecture: [{
-      fr: "Chaîne de traitement de bout en bout", en: "End-to-end workflow",
-      nodes: [
-        { fr: "Détection du véhicule (HC-SR04)", en: "Vehicle detection (HC-SR04)" },
-        { fr: "Estimation de la vitesse", en: "Speed estimation" },
-        { fr: "Seuil dépassé", en: "Threshold exceeded" },
-        { fr: "Capture d'image (caméra IP)", en: "Image capture (IP camera)" },
-        { fr: "OCR dans le cloud", en: "Cloud OCR" },
-        { fr: "Plaque extraite", en: "License plate extracted" },
-        { fr: "Transmission LoRa", en: "LoRa transmission" },
-        { fr: "MQTT", en: "MQTT" },
-        { fr: "Tableau de bord Node-RED", en: "Node-RED dashboard" }
-      ]
-    }],
-    images: [
-      { src: "assets/Radar%20intelligent%20IoT%20_%20vitesse%20et%20plaques.png", alt: { fr: "Vue d'ensemble : architecture et fonctionnement du système", en: "System overview: architecture and operation of the system" } },
-      { src: "assets/Dashbord.jpeg", alt: { fr: "Tableau de bord Node-RED : vitesse, plaque et alertes en temps réel", en: "Node-RED dashboard: speed, license plate and real-time alerts" } },
-      { src: "assets/Node%20red.jpeg", alt: { fr: "Flux Node-RED : réception MQTT, traitement JSON et visualisation", en: "Node-RED flow: MQTT reception, JSON processing and visualization" } }
-    ],
-    results: [],
-    links: { github: "", demo: "" },
-    fr: {
-      title: "Smart IoT Radar System",
-      subtitle: "Surveillance intelligente du trafic par systèmes embarqués et IoT",
-      summary: "Prototype IoT de surveillance du trafic associant ESP32, LoRa, MQTT, OCR dans le cloud et tableau de bord Node-RED pour détecter automatiquement des excès de vitesse simulés et les superviser en temps réel. Projet académique, ENSAM Casablanca, 2024–2025.",
-      context: "Prototype d'une chaîne automatisée de surveillance du trafic : il détecte des excès de vitesse simulés, identifie le véhicule grâce à sa plaque d'immatriculation et transmet l'événement à une station de supervision distante.",
-      objectives: [
-        "Détecter un dépassement de seuil de vitesse à partir de mesures de distance par capteur ultrasonique (HC-SR04)",
-        "Capturer une image du véhicule et en extraire la plaque par OCR dans le cloud, avec intégration Firebase",
-        "Transmettre les informations entre deux stations par LoRa (modules SX127x)",
-        "Superviser les vitesses, plaques et alertes en temps réel via MQTT et un tableau de bord Node-RED"
-      ],
-      contrib: [
-        "Programmation de l'ESP32 récepteur",
-        "Intégration et configuration du module LoRa récepteur",
-        "Mise en œuvre de la communication MQTT pour la supervision",
-        "Conception et réalisation du tableau de bord Node-RED",
-        "Traitement et visualisation des informations reçues sur les véhicules",
-        "Intégration matérielle et tests de la station de réception"
-      ],
-      contribNote: "Les sous-systèmes de détection de vitesse et d'OCR/cloud ont été développés collectivement par l'équipe du projet.",
-      evalPlan: [],
-      resultsNote: "Prototype de démonstration : aucune précision de détection, portée de communication ou mesure de performance n'est annoncée.",
-      limits: ["Les excès de vitesse sont simulés ; il s'agit d'un prototype académique, non déployé sur route.", "Aucun chiffre de précision, de portée ou de latence n'est revendiqué."]
-    },
-    en: {
-      title: "Smart IoT Radar System",
-      subtitle: "Intelligent Traffic Monitoring Using Embedded Systems & IoT",
-      summary: "Developed an IoT-based traffic monitoring prototype integrating ESP32, LoRa, MQTT, cloud-based OCR, and a Node-RED dashboard for automated speed violation detection and real-time monitoring. Academic project, ENSAM Casablanca, 2024–2025.",
-      context: "A prototype of an automated traffic-monitoring chain: it detects simulated speeding, identifies the vehicle from its license plate, and reports the event to a remote monitoring station.",
-      objectives: [
-        "Detect a speed-threshold violation from ultrasonic distance measurements (HC-SR04)",
-        "Capture a vehicle image and extract the license plate with cloud-based OCR, integrated with Firebase",
-        "Transmit vehicle information between two stations over LoRa (SX127x modules)",
-        "Monitor speeds, plates and alerts in real time through MQTT and a Node-RED dashboard"
-      ],
-      contrib: [
-        "Programmed the ESP32 receiver",
-        "Integrated and configured the LoRa receiver module",
-        "Implemented MQTT communication for monitoring",
-        "Designed and built the Node-RED dashboard",
-        "Processed and visualized the received vehicle information",
-        "Integrated the hardware and tested the receiving station"
-      ],
-      contribNote: "The speed-detection and OCR/cloud subsystems were developed collaboratively by the project team.",
-      evalPlan: [],
-      resultsNote: "Demonstration prototype: no detection accuracy, communication range or performance figures are claimed.",
-      limits: ["Speeding events are simulated; this is an academic prototype, not a road-deployed system.", "No accuracy, range or latency figures are claimed."]
-    },
-    steps: []
-  },
-  {
-    id: "rh-training-plan",
-    status: "toConfirm",
-    category: { fr: "Ressources humaines / Gestion", en: "Human Resources / Management" },
-    tags: ["Plan de formation", "Budget", "Évaluation"],
-    tech: [], architecture: [], images: [], results: [], links: {},
-    fr: {
-      title: "Plan de formation annuel et estimation budgétaire",
-      subtitle: "Étude de cas RH sur une entreprise fictive de 100 salariés",
-      summary: "Étude de cas RH menée à l'ENSAM Casablanca : élaboration d'un plan de formation annuel pour l'année 2027 et estimation de son budget, pour une entreprise fictive de 100 salariés (20 managers, 50 commerciaux, 30 techniciens).",
-      context: "Le rapport, en quatre chapitres, porte sur un plan de formation annuel pour Atlas Industrie Maroc, entreprise fictive implantée à Casablanca.",
-      objectives: ["Estimer le budget du plan de formation 2027", "Définir un dispositif d'évaluation du plan"],
-      contrib: ["Chapitre 4 du rapport : estimation budgétaire et dispositif d'évaluation du plan"],
-      contribNote: "Le rapport comporte quatre chapitres ; ma partie est le chapitre 4.",
-      evalPlan: [],
-      resultsNote: "Étude de cas sur une entreprise fictive : les calculs et simulations ne correspondent pas à des données réelles.",
-      limits: ["Entreprise fictive : aucune donnée réelle n'est utilisée.", "Aucun chiffre du budget n'est publié sur cette page."]
-    },
-    en: {
-      title: "Annual training plan and budget estimate",
-      subtitle: "HR case study for a fictional company of 100 employees",
-      summary: "HR case study at ENSAM Casablanca: design of an annual training plan for 2027 and its budget estimate, for a fictional company of 100 employees (20 managers, 50 sales staff, 30 technicians).",
-      context: "The four-chapter report covers an annual training plan for Atlas Industrie Maroc, a fictional company based in Casablanca.",
-      objectives: ["Estimate the budget of the 2027 training plan", "Define an evaluation framework for the plan"],
-      contrib: ["Chapter 4 of the report: budget estimate and evaluation framework of the plan"],
-      contribNote: "The report has four chapters; my part is chapter 4.",
-      evalPlan: [],
-      resultsNote: "Case study on a fictional company: calculations and simulations do not represent real data.",
-      limits: ["Fictional company: no real data is used.", "No budget figure is published on this page."]
-    },
-    steps: []
-  },
-  {
-    id: "qualivision",
-    status: "progress",
-    category: { fr: "Vision par ordinateur / IA industrielle", en: "Computer Vision / Industrial AI" },
-    tags: ["Computer Vision", "Anomaly Detection", "Streamlit", "Python"],
-    tech: ["PatchCore", "PaDiM", "EfficientAD", "Anomalib", "Python", "Streamlit", "Plotly", "SQLite", "MVTec AD", "VisA"],
-    techGroups: [
-      { fr: "IA et détection d'anomalies", en: "AI & Anomaly Detection", items: ["PatchCore", "PaDiM", "EfficientAD", "Anomalib"] },
-      { fr: "Plateforme web", en: "Web Platform", items: ["Python", "Streamlit", "Plotly", "SQLite"] },
-      { fr: "Données publiques", en: "Public Datasets", items: ["MVTec AD", "VisA"] }
-    ],
-    architecture: [{
-      fr: "Chaîne d'inspection", en: "Inspection workflow",
-      nodes: [
-        { fr: "Images de pièces saines (apprentissage)", en: "Images of healthy parts (training)" },
-        { fr: "Nouvelle image à inspecter", en: "New image to inspect" },
-        { fr: "Modèle IA : score et carte de chaleur", en: "AI model: score and heatmap" },
-        { fr: "Verdict : saine ou suspecte", en: "Verdict: healthy or suspicious" },
-        { fr: "Décision de l'opérateur", en: "Operator decision" }
-      ]
-    }],
-    images: [], results: [], links: { github: "", demo: "" },
-    fr: {
-      title: "QualiVision AI",
-      subtitle: "Contrôle qualité industriel assisté par IA : détection d'anomalies visuelles non supervisée",
-      summary: "Plateforme web qui apprend l'apparence normale de pièces industrielles, détecte les défauts de nouvelles pièces et les localise par une carte de chaleur. Projet d'expertise réalisé en équipe, en cours de développement.",
-      context: "En production, la plupart des pièces sont conformes et les défauts sont rares, variés et difficiles à annoter en grand nombre. Le projet apprend donc à partir de pièces saines pour repérer les écarts sur de nouvelles pièces. Il s'appuie sur deux jeux de données publics : MVTec AD (5 354 images, 15 catégories) et VisA (10 821 images, 12 classes).",
-      objectives: [
-        "Détecter et localiser des défauts jamais vus, en apprenant principalement à partir d'images de pièces saines",
-        "Comparer trois algorithmes (PatchCore, PaDiM, EfficientAD) sur au moins cinq catégories de pièces",
-        "Intégrer le modèle retenu dans une plateforme d'inspection Streamlit avec score d'anomalie, carte de chaleur, verdict et décision de l'opérateur",
-        "Tracer les inspections par lot (SQLite), avec tableau de bord de qualité et export CSV"
-      ],
-      contrib: [
-        "Développement de l'interface d'inspection Streamlit (importation et affichage des images, choix de la catégorie)",
-        "Module d'inférence reliant l'application au modèle entraîné",
-        "Affichage du score d'anomalie, du verdict et de la carte de chaleur, et actions de l'opérateur",
-        "Gestion des erreurs (image invalide, modèle absent)"
-      ],
-      contribNote: "Projet d'équipe de cinq : la préparation des données, l'entraînement des modèles, la base SQLite et le tableau de bord, ainsi que les tests et le rapport sont confiés à d'autres membres.",
-      evalPlan: ["Image AUROC", "Pixel AUROC", "F1-score", "Temps d'inférence"],
-      resultsNote: "Projet en cours : aucun résultat de détection n'est publié. Les scores et décisions affichés pendant la mise au point de l'interface sont simulés.",
-      limits: ["Données publiques uniquement : pas de ligne de production réelle.", "Le prototype ne constitue ni une certification industrielle ni une preuve de réduction des rebuts."]
-    },
-    en: {
-      title: "QualiVision AI",
-      subtitle: "AI-assisted industrial quality control: unsupervised visual anomaly detection",
-      summary: "Web platform that learns the normal appearance of industrial parts, detects defects on new parts and localizes them with a heatmap. Team expertise project, currently in development.",
-      context: "In production most parts are conforming, and defects are rare, varied and hard to annotate at scale. The project therefore learns from healthy parts to spot deviations on new ones. It relies on two public datasets: MVTec AD (5,354 images, 15 categories) and VisA (10,821 images, 12 classes).",
-      objectives: [
-        "Detect and localize previously unseen defects by learning mainly from images of healthy parts",
-        "Compare three algorithms (PatchCore, PaDiM, EfficientAD) on at least five part categories",
-        "Integrate the selected model into a Streamlit inspection platform with anomaly score, heatmap, verdict and operator decision",
-        "Trace inspections by batch (SQLite), with a quality dashboard and CSV export"
-      ],
-      contrib: [
-        "Developed the Streamlit inspection interface (image upload and display, category selection)",
-        "Inference module connecting the application to the trained model",
-        "Display of the anomaly score, verdict and heatmap, and operator actions",
-        "Error handling (invalid image, missing model)"
-      ],
-      contribNote: "Five-person team project: data preparation, model training, the SQLite database and dashboard, as well as testing and the report are handled by other members.",
-      evalPlan: ["Image AUROC", "Pixel AUROC", "F1-score", "Inference time"],
-      resultsNote: "Work in progress: no detection results are published. Scores and decisions shown while the interface is being built are simulated.",
-      limits: ["Public datasets only: no real production line.", "The prototype is neither an industrial certification nor proof of scrap reduction."]
-    },
-    steps: [
-      { state: "done", fr: "Application Streamlit de gestion des lots et base SQLite créées", en: "Streamlit batch-management app and SQLite database created" },
-      { state: "done", fr: "Images de test de la catégorie bottle préparées", en: "Test images for the bottle category prepared" },
-      { state: "progress", fr: "Interface d'inspection Streamlit, testée avec des scores et décisions simulés", en: "Streamlit inspection interface, tested with simulated scores and decisions" },
-      { state: "todo", fr: "Entraînement et comparaison de PatchCore, PaDiM et EfficientAD sur cinq catégories au moins", en: "Training and comparison of PatchCore, PaDiM and EfficientAD on at least five categories" },
-      { state: "todo", fr: "Connexion du modèle entraîné à l'interface (score d'anomalie et carte de chaleur)", en: "Connecting the trained model to the interface (anomaly score and heatmap)" },
-      { state: "todo", fr: "Tests, rapport et présentation", en: "Testing, report and presentation" }
-    ]
-  },
-  {
-    id: "vr-ar-maintenance",
-    status: "toConfirm", tags: ["VR/AR"], tech: [], architecture: [], images: [], results: [], links: {},
-    fr: { title: "VR/AR pour la maintenance industrielle", summary: "Fiche à compléter.", context: "", objectives: [], evalPlan: [], resultsNote: "Détails et état réel à confirmer." },
-    en: { title: "VR/AR for industrial maintenance", summary: "Page to be completed.", context: "", objectives: [], evalPlan: [], resultsNote: "Details and actual status to be confirmed." },
-    steps: []
-  }
+// Un projet = un bloc { ... }. Copiez-en un pour en ajouter. Textes : ["français","English"]
+// status : "done" | "progress" | "demo" | "tbc"   —   steps : "done" | "progress" | "todo"
+// links : platform (site/application), github, demo ; laissez "" si inexistant (le bouton disparaît)
+// images : fichiers dans assets/images/<id>/ puis {src:"assets/images/<id>/nom.png",alt:["légende","caption"]}
+// cover : image de couverture de la carte (facultatif)
+window.PROJECTS=[
+{id:"ccps",status:"progress",cover:"assets/images/ccps/open-webui.webp",
+ title:["CCPS Lab Assistant","CCPS Lab Assistant"],
+ tag:["Assistant IA local (RAG) sur Raspberry Pi 5 pour la documentation du laboratoire CCPS.","Local AI assistant (RAG) on Raspberry Pi 5 for the CCPS lab documentation."],
+ context:["Les utilisateurs du laboratoire CCPS de l'ENSAM Casablanca doivent retrouver et comprendre des informations dispersées dans la documentation, parfois avec une connexion Internet limitée. Le projet explore une approche Edge AI : tout fonctionne en local sur un Raspberry Pi 5 (16 Go de RAM).","Users of the CCPS lab at ENSAM Casablanca need to find and understand information spread across the documentation, sometimes with limited Internet access. The project explores an Edge AI approach: everything runs locally on a Raspberry Pi 5 (16 GB RAM)."],
+ goals:[["Répondre aux questions techniques à partir de la documentation du laboratoire","Answer technical questions from the lab documentation"],["Fonctionner hors ligne ou avec une connexion limitée","Work offline or with limited connectivity"],["Évaluer la faisabilité sur une carte à faible coût","Assess feasibility on a low-cost board"]],
+ arch:[["Documentation","Documentation"],["Collections","Collections"],["Recherche RAG","RAG retrieval"],["Gemma 3 4B · Ollama","Gemma 3 4B · Ollama"],["Open WebUI","Open WebUI"]],
+ tech:["Raspberry Pi 5 (16 Go)","Ollama","Open WebUI","Gemma 3 4B (quantifié)","RAG"],
+ steps:[["progress",["Documentation organisée en collections","Documentation organized in collections"]],["progress",["Assistant local : Ollama + Open WebUI + Gemma 3 4B","Local assistant: Ollama + Open WebUI + Gemma 3 4B"]],["progress",["Banc d'essai de modèles locaux (essais intermédiaires avec gemma3:1b et qwen2.5:3b) : qualité, latence, RAM, CPU, température. Modèle retenu pour la version finale : Gemma 3 4B","Benchmark of local models (intermediate runs with gemma3:1b and qwen2.5:3b): quality, latency, RAM, CPU, temperature. Model kept for the final version: Gemma 3 4B"]],["todo",["Comparaison entre plateformes","Comparison across platforms"]]],
+ planned:[["Qualité des réponses","Answer quality"],["Latence","Latency"],["Mémoire RAM","RAM usage"],["Utilisation CPU","CPU usage"],["Température du Raspberry Pi","Raspberry Pi temperature"]],
+ results:[],
+ note:["Projet en développement. Les captures ci-dessus sont des exécutions intermédiaires, avant les résultats finaux : aucune valeur n'est présentée comme résultat.","Project under development. The screenshots above are intermediate runs, before the final results: no value is presented as a result."],
+ links:{platform:"",github:"https://github.com/KADIRI-ABDELJALIL/CCPS-Lab-Assistant",demo:""},images:[{src:"assets/images/ccps/open-webui.webp",alt:["Interface Open WebUI de l'assistant CCPS","Open WebUI interface of the CCPS assistant"]},{src:"assets/images/ccps/eval-gemma3-1b.webp",alt:["Évaluation intermédiaire (gemma3:1b) : qualité, latence, tokens/s, CPU, RAM, température","Intermediate evaluation (gemma3:1b): quality, latency, tokens/s, CPU, RAM, temperature"]},{src:"assets/images/ccps/eval-qwen2-5-3b.webp",alt:["Évaluation intermédiaire (qwen2.5:3b)","Intermediate evaluation (qwen2.5:3b)"]}]},
+
+{id:"qualivision",status:"progress",cover:"",
+ title:["QualiVision AI","QualiVision AI"],
+ tag:["Plateforme web de contrôle qualité par détection d'anomalies visuelles non supervisée.","Web platform for quality control using unsupervised visual anomaly detection."],
+ context:["Les défauts industriels sont rares et difficiles à annoter. QualiVision apprend sur des pièces saines et localise les défauts par une carte de chaleur. Le projet s'appuie sur des jeux de données publics (MVTec AD, VisA) et prévoit de comparer PatchCore, PaDiM et EfficientAD.","Industrial defects are rare and hard to annotate. QualiVision learns from healthy parts and locates defects with a heatmap. It relies on public datasets (MVTec AD, VisA) and plans to compare PatchCore, PaDiM and EfficientAD."],
+ role:["Ma contribution (équipe de cinq) : interface Streamlit, module d'inférence, affichage du score, du verdict et de la carte de chaleur, actions de l'opérateur, gestion des erreurs.","My contribution (team of five): Streamlit interface, inference module, display of score, verdict and heatmap, operator actions, error handling."],
+ arch:[["Images saines","Healthy images"],["Nouvelle image","New image"],["Modèle IA","AI model"],["Verdict + carte de chaleur","Verdict + heatmap"],["Décision de l'opérateur","Operator decision"]],
+ tech:["Python","Streamlit","SQLite","Anomalib","MVTec AD","VisA"],
+ steps:[["done",["Application de gestion des lots","Batch management app"]],["done",["Base SQLite et images de test (bottle)","SQLite database and test images (bottle)"]],["progress",["Interface d'inspection","Inspection interface"]],["todo",["Entraînement des modèles, connexion et tests","Model training, integration and tests"]]],
+ results:[],
+ note:["Aucun résultat de détection n'est annoncé. Les scores actuels sont simulés, seules des données publiques sont utilisées, et le prototype n'est pas une certification industrielle.","No detection result is claimed. Current scores are simulated, only public data is used, and the prototype is not an industrial certification."],
+ links:{platform:"",github:"",demo:""},images:[]},
+
+{id:"atlas",status:"done",cover:"assets/images/atlas/dashboard.webp",
+ title:["Atlas RH","Atlas RH"],
+ tag:["Plateforme de gestion, planification et suivi des formations professionnelles.","Platform for managing, scheduling and tracking professional training."],
+ context:["Projet pédagogique de l'ENSAM Casablanca : plan annuel de formation 2027 d'un cas entièrement fictif (Atlas Industrie Maroc), réalisé en équipe de cinq. L'application tourne dans le navigateur, sans serveur : les données sont enregistrées localement.","Educational project at ENSAM Casablanca: 2027 annual training plan for an entirely fictional case (Atlas Industrie Maroc), built by a team of five. The app runs in the browser without a server: data is stored locally."],
+ feat:[["Tableau de bord : indicateurs, effectifs, coûts pédagogiques, budget économique","Dashboard: indicators, workforce, training costs, economic budget"],["Plan de formation : catégories, groupes, formations, durées, tarifs, scénarios S0 à S4","Training plan: categories, groups, courses, durations, rates, scenarios S0 to S4"],["Planification : calendrier prévisionnel des sessions","Scheduling: forecast calendar of sessions"],["Suivi et évaluations : présences, statuts, résultats avant/après, satisfaction","Follow-up and evaluations: attendance, status, before/after results, satisfaction"],["Export Excel (6 feuilles), CSV, sauvegarde et import JSON","Excel export (6 sheets), CSV, JSON save and import"]],
+ tech:["HTML5","CSS3","JavaScript natif","Export XLSX intégré","GitHub","Cloudflare Workers"],
+ steps:[["done",["Application complète : tableau de bord, plan, planification, suivi","Complete app: dashboard, plan, scheduling, follow-up"]],["done",["Exports Excel, CSV et JSON","Excel, CSV and JSON exports"]],["done",["Tests de calcul et d'export Excel","Calculation and Excel export tests"]],["done",["Déploiement en ligne (Cloudflare Workers)","Online deployment (Cloudflare Workers)"]]],
+ results:[["Cas fictif : 100 collaborateurs, 6 actions de formation, 16 sessions","Fictional case: 100 employees, 6 training actions, 16 sessions"],["Simulation : budget économique de 701 050 MAD (S0) contre 634 310 MAD (S4 optimisé)","Simulation: economic budget of 701,050 MAD (S0) versus 634,310 MAD (optimized S4)"]],
+ note:["Données entièrement fictives. Les scénarios sont des simulations, pas des économies constatées. La sauvegarde reste dans le navigateur : n'importez pas de données personnelles réelles.","Entirely fictional data. Scenarios are simulations, not observed savings. Data stays in the browser: do not import real personal data."],
+ links:{platform:"https://atlas-rh-formation.abdeljalil-kad.workers.dev/",github:"https://github.com/KADIRI-ABDELJALIL/atlas-rh-formation",demo:""},images:[{src:"assets/images/atlas/dashboard.webp",alt:["Tableau de bord d'Atlas RH (données fictives)","Atlas RH dashboard (fictional data)"]}]},
+
+{id:"lorawan",status:"tbc",cover:"",
+ title:["IoT industriel LoRaWAN + Edge AI","Industrial IoT LoRaWAN + Edge AI"],
+ tag:["Maintenance prédictive combinant LoRaWAN et Edge AI.","Predictive maintenance combining LoRaWAN and Edge AI."],
+ context:["Fiche à compléter : l'état réel du projet doit être confirmé.","Page to complete: the actual project status must be confirmed."],
+ tech:["LoRaWAN","Edge AI"],steps:[],results:[],links:{platform:"",github:"",demo:""},images:[]},
+
+{id:"radar",status:"tbc",cover:"",
+ title:["Radar intelligent","Smart radar"],
+ tag:["Projet de radar intelligent.","Smart radar project."],
+ context:["Fiche à compléter : l'état réel du projet doit être confirmé.","Page to complete: the actual project status must be confirmed."],
+ tech:[],steps:[],results:[],links:{platform:"",github:"",demo:""},images:[]},
+
+{id:"vrar",status:"tbc",cover:"",
+ title:["VR/AR pour la maintenance industrielle","VR/AR for industrial maintenance"],
+ tag:["Réalité virtuelle et augmentée appliquée à la maintenance industrielle.","Virtual and augmented reality applied to industrial maintenance."],
+ context:["Fiche à compléter : l'état réel du projet doit être confirmé.","Page to complete: the actual project status must be confirmed."],
+ tech:["VR","AR"],steps:[],results:[],links:{platform:"",github:"",demo:""},images:[]}
 ];
