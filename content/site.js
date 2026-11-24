@@ -5,7 +5,7 @@ window.SITE={
   links:{
     github:"https://github.com/KADIRI-ABDELJALIL",
     linkedin:"https://www.linkedin.com/in/abdeljalil-kadiri-b08825363",
-    cv:"" // pour activer : déposez cv.pdf dans assets/ puis écrivez "assets/cv.pdf"
+    cv:"assets/cv.pdf" // pour activer : déposez cv.pdf dans assets/ puis écrivez "assets/cv.pdf"
   },
   roles:[["IoT industriel","Industrial IoT"],["Edge AI","Edge AI"],["LLM & RAG","LLM & RAG"],["Systèmes embarqués","Embedded systems"],["Industrie 4.0","Industry 4.0"]],
   bio:["Élève ingénieur en 3e année à l'ENSAM Casablanca (MSEI, option Systèmes Industriels Connectés). Je conçois des systèmes connectés et des solutions d'IA embarquée pour l'industrie.","Third-year engineering student at ENSAM Casablanca (MSEI, Connected Industrial Systems track). I design connected systems and embedded AI solutions for industry."],
