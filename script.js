@@ -95,17 +95,76 @@ function applyI18n() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll(".langsw button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === lang));
-  skills(); featured(); projects(); links(); reveal();
+  skills(); featured(); projects(); links(); reveal(); marquee(); stats(); typed(); dots(); onScroll();
 }
 function reveal() {
   if (!("IntersectionObserver" in window)) return;
   document.documentElement.classList.add("js");
   window.__io = window.__io || new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); window.__io.unobserve(e.target); } }), { threshold: 0.08 });
-  document.querySelectorAll("main section:not(.hero), .project, #skills .card, #featured .card").forEach(e => {
-    if (!e.classList.contains("reveal")) { e.classList.add("reveal"); window.__io.observe(e); }
+  document.querySelectorAll("main section:not(.hero), .project, #skills .card, #featured .card, .chips.big li, .pgrid .card").forEach(e => {
+    if (!e.classList.contains("reveal")) { e.classList.add("reveal"); e.style.setProperty("--i", [...e.parentNode.children].indexOf(e)); window.__io.observe(e); }
   });
 }
 function setLang(l) { lang = l; try { localStorage.setItem("lang", l); } catch (e) {} applyI18n(); }
+
+/* ---- Effets dynamiques (animations) ---- */
+const RM = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)").matches : false;
+function techList() { const s = new Set(); P.forEach(p => [...(p.tech || []), ...(p.techGroups || []).flatMap(g => g.items)].forEach(x => s.add(x))); return [...s]; }
+function marquee() { const m = $("#marquee"); if (!m) return; const l = techList().map(x => `<span>${esc(x)}</span>`).join(""); m.innerHTML = l + l; }
+function stats() {
+  const v = { projects: P.filter(p => p.status !== "toConfirm").length, tech: techList().length, areas: document.querySelectorAll(".chips.big li").length };
+  document.querySelectorAll("[data-count]").forEach(e => {
+    const to = v[e.dataset.count] || 0; if (RM) { e.textContent = to; return; }
+    const t0 = performance.now();
+    (function f(n) { const k = Math.min(1, (n - t0) / 1100); e.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+  });
+}
+let typedTimer;
+function typed() {
+  const el = $("#typed"); if (!el) return; clearTimeout(typedTimer);
+  const words = [1, 2, 3, 4, 5, 6, 7].map(i => t("int." + i)); let w = 0, c = 0, del = false;
+  if (RM) { el.textContent = words[0]; return; }
+  (function tick() {
+    const word = words[w]; c += del ? -1 : 1; el.textContent = word.slice(0, c);
+    let d = del ? 28 : 55;
+    if (!del && c === word.length) { del = true; d = 1400; } else if (del && c === 0) { del = false; w = (w + 1) % words.length; d = 350; }
+    typedTimer = setTimeout(tick, d);
+  })();
+}
+function dots() {
+  const nav = $("#dots"); if (!nav) return;
+  nav.innerHTML = [...document.querySelectorAll("main section[data-sec]")].map(s => `<a href="#${s.id}" aria-label="${esc($("h2 span:last-child", s).textContent)}"><span>${esc($("h2 span:last-child", s).textContent)}</span></a>`).join("");
+}
+function onScroll() {
+  const h = document.documentElement, p = $("#progress");
+  if (p) p.style.transform = `scaleX(${h.scrollTop / ((h.scrollHeight - h.clientHeight) || 1)})`;
+  let cur = null; document.querySelectorAll("main section[data-sec]").forEach(s => { if (s.getBoundingClientRect().top < innerHeight * 0.4) cur = s.id; });
+  document.querySelectorAll("#dots a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + cur));
+}
+function net() {
+  const cv = $("#net"); if (!cv || RM) return;
+  const x = cv.getContext && cv.getContext("2d"); if (!x || !("IntersectionObserver" in window)) return;
+  let W, H, pts = [], on = true; const m = { x: -999, y: -999 };
+  const size = () => { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; pts = Array.from({ length: Math.min(70, Math.round(W * H / 16000)) }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4 })); };
+  size(); addEventListener("resize", size);
+  cv.parentNode.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); m.x = e.clientX - r.left; m.y = e.clientY - r.top; });
+  new IntersectionObserver(es => { on = es[0].isIntersecting; }).observe(cv);
+  const line = (a, b, c, al) => { x.strokeStyle = `rgba(34,211,238,${al})`; x.beginPath(); x.moveTo(a, b); x.lineTo(c.x, c.y); x.stroke(); };
+  (function draw() {
+    requestAnimationFrame(draw); if (!on || document.hidden) return; x.clearRect(0, 0, W, H);
+    pts.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
+      x.fillStyle = "rgba(34,211,238,.8)"; x.beginPath(); x.arc(p.x, p.y, 1.8, 0, 6.3); x.fill();
+      for (let k = i + 1; k < pts.length; k++) { const q = pts[k], d = Math.hypot(p.x - q.x, p.y - q.y); if (d < 120) line(p.x, p.y, q, 0.22 * (1 - d / 120)); }
+      const dm = Math.hypot(p.x - m.x, p.y - m.y); if (dm < 150) line(p.x, p.y, m, 0.5 * (1 - dm / 150));
+    });
+  })();
+}
+addEventListener("scroll", onScroll, { passive: true });
+document.addEventListener("pointermove", e => {
+  const c = e.target.closest && e.target.closest(".card, .project"); if (!c) return;
+  const r = c.getBoundingClientRect(); c.style.setProperty("--mx", (e.clientX - r.left) + "px"); c.style.setProperty("--my", (e.clientY - r.top) + "px");
+});
 
 const X = {
   fr: { "p.contrib": "Ma contribution", "p.limits": "Limites", "p.view": "Voir le projet", "p.arch": "Architecture et fonctionnement", "lb.close": "Fermer" },
@@ -124,3 +183,4 @@ document.addEventListener("click", e => {
 
 chrome(); applyI18n();
 if (location.hash) { const h = document.getElementById(location.hash.slice(1)); if (h) h.scrollIntoView(); }
+net();

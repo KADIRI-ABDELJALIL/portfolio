@@ -1,0 +1,10 @@
+DOSSIER DES IMAGES DU PROJET : lorawan-edge-ai
+
+1. Deposez ici vos images (PNG, JPG ou WebP, idealement moins de 500 Ko).
+2. Nommez-les avec : minuscules, sans espaces, sans accents. Exemple : 01-vue-ensemble.png
+3. Declarez-les dans content/projects.js, dans le bloc du projet "lorawan-edge-ai" :
+   images: [
+     { src: "assets/images/lorawan-edge-ai/01-vue-ensemble.png",
+       alt: { fr: "Vue d'ensemble", en: "Overview" } }
+   ],
+Masquez avant publication les plaques, adresses IP, cles et identifiants visibles sur une capture.

@@ -170,6 +170,113 @@ window.PROJECTS = [
     steps: []
   },
   {
+    id: "rh-training-plan",
+    status: "toConfirm",
+    category: { fr: "Ressources humaines / Gestion", en: "Human Resources / Management" },
+    tags: ["Plan de formation", "Budget", "Évaluation"],
+    tech: [], architecture: [], images: [], results: [], links: {},
+    fr: {
+      title: "Plan de formation annuel et estimation budgétaire",
+      subtitle: "Étude de cas RH sur une entreprise fictive de 100 salariés",
+      summary: "Étude de cas RH menée à l'ENSAM Casablanca : élaboration d'un plan de formation annuel pour l'année 2027 et estimation de son budget, pour une entreprise fictive de 100 salariés (20 managers, 50 commerciaux, 30 techniciens).",
+      context: "Le rapport, en quatre chapitres, porte sur un plan de formation annuel pour Atlas Industrie Maroc, entreprise fictive implantée à Casablanca.",
+      objectives: ["Estimer le budget du plan de formation 2027", "Définir un dispositif d'évaluation du plan"],
+      contrib: ["Chapitre 4 du rapport : estimation budgétaire et dispositif d'évaluation du plan"],
+      contribNote: "Le rapport comporte quatre chapitres ; ma partie est le chapitre 4.",
+      evalPlan: [],
+      resultsNote: "Étude de cas sur une entreprise fictive : les calculs et simulations ne correspondent pas à des données réelles.",
+      limits: ["Entreprise fictive : aucune donnée réelle n'est utilisée.", "Aucun chiffre du budget n'est publié sur cette page."]
+    },
+    en: {
+      title: "Annual training plan and budget estimate",
+      subtitle: "HR case study for a fictional company of 100 employees",
+      summary: "HR case study at ENSAM Casablanca: design of an annual training plan for 2027 and its budget estimate, for a fictional company of 100 employees (20 managers, 50 sales staff, 30 technicians).",
+      context: "The four-chapter report covers an annual training plan for Atlas Industrie Maroc, a fictional company based in Casablanca.",
+      objectives: ["Estimate the budget of the 2027 training plan", "Define an evaluation framework for the plan"],
+      contrib: ["Chapter 4 of the report: budget estimate and evaluation framework of the plan"],
+      contribNote: "The report has four chapters; my part is chapter 4.",
+      evalPlan: [],
+      resultsNote: "Case study on a fictional company: calculations and simulations do not represent real data.",
+      limits: ["Fictional company: no real data is used.", "No budget figure is published on this page."]
+    },
+    steps: []
+  },
+  {
+    id: "qualivision",
+    status: "progress",
+    category: { fr: "Vision par ordinateur / IA industrielle", en: "Computer Vision / Industrial AI" },
+    tags: ["Computer Vision", "Anomaly Detection", "Streamlit", "Python"],
+    tech: ["PatchCore", "PaDiM", "EfficientAD", "Anomalib", "Python", "Streamlit", "Plotly", "SQLite", "MVTec AD", "VisA"],
+    techGroups: [
+      { fr: "IA et détection d'anomalies", en: "AI & Anomaly Detection", items: ["PatchCore", "PaDiM", "EfficientAD", "Anomalib"] },
+      { fr: "Plateforme web", en: "Web Platform", items: ["Python", "Streamlit", "Plotly", "SQLite"] },
+      { fr: "Données publiques", en: "Public Datasets", items: ["MVTec AD", "VisA"] }
+    ],
+    architecture: [{
+      fr: "Chaîne d'inspection", en: "Inspection workflow",
+      nodes: [
+        { fr: "Images de pièces saines (apprentissage)", en: "Images of healthy parts (training)" },
+        { fr: "Nouvelle image à inspecter", en: "New image to inspect" },
+        { fr: "Modèle IA : score et carte de chaleur", en: "AI model: score and heatmap" },
+        { fr: "Verdict : saine ou suspecte", en: "Verdict: healthy or suspicious" },
+        { fr: "Décision de l'opérateur", en: "Operator decision" }
+      ]
+    }],
+    images: [], results: [], links: { github: "", demo: "" },
+    fr: {
+      title: "QualiVision AI",
+      subtitle: "Contrôle qualité industriel assisté par IA : détection d'anomalies visuelles non supervisée",
+      summary: "Plateforme web qui apprend l'apparence normale de pièces industrielles, détecte les défauts de nouvelles pièces et les localise par une carte de chaleur. Projet d'expertise réalisé en équipe, en cours de développement.",
+      context: "En production, la plupart des pièces sont conformes et les défauts sont rares, variés et difficiles à annoter en grand nombre. Le projet apprend donc à partir de pièces saines pour repérer les écarts sur de nouvelles pièces. Il s'appuie sur deux jeux de données publics : MVTec AD (5 354 images, 15 catégories) et VisA (10 821 images, 12 classes).",
+      objectives: [
+        "Détecter et localiser des défauts jamais vus, en apprenant principalement à partir d'images de pièces saines",
+        "Comparer trois algorithmes (PatchCore, PaDiM, EfficientAD) sur au moins cinq catégories de pièces",
+        "Intégrer le modèle retenu dans une plateforme d'inspection Streamlit avec score d'anomalie, carte de chaleur, verdict et décision de l'opérateur",
+        "Tracer les inspections par lot (SQLite), avec tableau de bord de qualité et export CSV"
+      ],
+      contrib: [
+        "Développement de l'interface d'inspection Streamlit (importation et affichage des images, choix de la catégorie)",
+        "Module d'inférence reliant l'application au modèle entraîné",
+        "Affichage du score d'anomalie, du verdict et de la carte de chaleur, et actions de l'opérateur",
+        "Gestion des erreurs (image invalide, modèle absent)"
+      ],
+      contribNote: "Projet d'équipe de cinq : la préparation des données, l'entraînement des modèles, la base SQLite et le tableau de bord, ainsi que les tests et le rapport sont confiés à d'autres membres.",
+      evalPlan: ["Image AUROC", "Pixel AUROC", "F1-score", "Temps d'inférence"],
+      resultsNote: "Projet en cours : aucun résultat de détection n'est publié. Les scores et décisions affichés pendant la mise au point de l'interface sont simulés.",
+      limits: ["Données publiques uniquement : pas de ligne de production réelle.", "Le prototype ne constitue ni une certification industrielle ni une preuve de réduction des rebuts."]
+    },
+    en: {
+      title: "QualiVision AI",
+      subtitle: "AI-assisted industrial quality control: unsupervised visual anomaly detection",
+      summary: "Web platform that learns the normal appearance of industrial parts, detects defects on new parts and localizes them with a heatmap. Team expertise project, currently in development.",
+      context: "In production most parts are conforming, and defects are rare, varied and hard to annotate at scale. The project therefore learns from healthy parts to spot deviations on new ones. It relies on two public datasets: MVTec AD (5,354 images, 15 categories) and VisA (10,821 images, 12 classes).",
+      objectives: [
+        "Detect and localize previously unseen defects by learning mainly from images of healthy parts",
+        "Compare three algorithms (PatchCore, PaDiM, EfficientAD) on at least five part categories",
+        "Integrate the selected model into a Streamlit inspection platform with anomaly score, heatmap, verdict and operator decision",
+        "Trace inspections by batch (SQLite), with a quality dashboard and CSV export"
+      ],
+      contrib: [
+        "Developed the Streamlit inspection interface (image upload and display, category selection)",
+        "Inference module connecting the application to the trained model",
+        "Display of the anomaly score, verdict and heatmap, and operator actions",
+        "Error handling (invalid image, missing model)"
+      ],
+      contribNote: "Five-person team project: data preparation, model training, the SQLite database and dashboard, as well as testing and the report are handled by other members.",
+      evalPlan: ["Image AUROC", "Pixel AUROC", "F1-score", "Inference time"],
+      resultsNote: "Work in progress: no detection results are published. Scores and decisions shown while the interface is being built are simulated.",
+      limits: ["Public datasets only: no real production line.", "The prototype is neither an industrial certification nor proof of scrap reduction."]
+    },
+    steps: [
+      { state: "done", fr: "Application Streamlit de gestion des lots et base SQLite créées", en: "Streamlit batch-management app and SQLite database created" },
+      { state: "done", fr: "Images de test de la catégorie bottle préparées", en: "Test images for the bottle category prepared" },
+      { state: "progress", fr: "Interface d'inspection Streamlit, testée avec des scores et décisions simulés", en: "Streamlit inspection interface, tested with simulated scores and decisions" },
+      { state: "todo", fr: "Entraînement et comparaison de PatchCore, PaDiM et EfficientAD sur cinq catégories au moins", en: "Training and comparison of PatchCore, PaDiM and EfficientAD on at least five categories" },
+      { state: "todo", fr: "Connexion du modèle entraîné à l'interface (score d'anomalie et carte de chaleur)", en: "Connecting the trained model to the interface (anomaly score and heatmap)" },
+      { state: "todo", fr: "Tests, rapport et présentation", en: "Testing, report and presentation" }
+    ]
+  },
+  {
     id: "vr-ar-maintenance",
     status: "toConfirm", tags: ["VR/AR"], tech: [], architecture: [], images: [], results: [], links: {},
     fr: { title: "VR/AR pour la maintenance industrielle", summary: "Fiche à compléter.", context: "", objectives: [], evalPlan: [], resultsNote: "Détails et état réel à confirmer." },
