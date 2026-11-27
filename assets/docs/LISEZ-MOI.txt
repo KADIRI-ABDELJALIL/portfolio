@@ -1,3 +1,0 @@
-DOSSIER DES DOCUMENTS (rapports PDF, fiches...).
-Votre CV reste dans assets/cv.pdf : pour le mettre a jour, renvoyez un nouveau fichier nomme exactement cv.pdf
-dans le dossier assets (il remplace l'ancien).
