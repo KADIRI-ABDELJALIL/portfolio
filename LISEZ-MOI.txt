@@ -1,36 +1,29 @@
-PORTFOLIO - GUIDE RAPIDE
-Adresse du site : https://kadiri-abdeljalil.github.io/portfolio/
+AK ENGINEERING PORTFOLIO — V1
+=============================
+Ce dossier est une adaptation du dépôt original fourni, avec les mêmes pages HTML, le logo <AK/>, la palette, les particules, les animations et le moteur de fiches projets.
 
-ORGANISATION DES FICHIERS
-  index.html, projects.html     Structure des pages (a ne pas modifier)
-  style.css                     Couleurs et design (variables en haut du fichier)
-  script.js                     Animations et affichage automatique
-  content/site.js               Vos infos : e-mail, liens (CV, LinkedIn, GitHub), competences, textes FR/EN
-  content/projects.js           TOUS les projets
-  content/modele-projet.txt     Modele a copier pour ajouter un projet
-  assets/cv.pdf                 Votre CV (renvoyez un fichier de meme nom pour le mettre a jour)
-  assets/og-image.png           Miniature LinkedIn
-  assets/images/<id-projet>/    Images de chaque projet (un dossier par projet)
-  assets/docs/                  Autres documents
+UTILISATION
+- Extraire le ZIP ; ouvrir index.html dans un navigateur moderne, ou utiliser un serveur local (python -m http.server 8000).
+- Pour GitHub Pages : remplacer les fichiers correspondants à la racine du dépôt (conserver les dossiers assets et content), puis vérifier le site publié. Le site public n'a pas été modifié par ChatGPT.
+- Modifier content/site.js pour le profil et les compétences ; content/projects.js pour les fiches ; content/extra.js pour les parcours, certificats, contact et autres sections.
 
-AJOUTER UNE IMAGE A UN PROJET
-  1. Nommez-la en minuscules, sans espaces ni accents : 01-vue-ensemble.png
-  2. Deposez-la dans assets/images/<id-du-projet>/
-  3. Dans content/projects.js, dans le bloc du projet, ajoutez-la a la ligne images (voir LISEZ-MOI.txt du dossier).
+POINTS À FINALISER / VÉRIFIER AVANT PUBLICATION
+- Le sélecteur FR/EN/AR et la direction RTL sont opérationnels ; certains anciens paragraphes détaillés et légendes restent en français en mode arabe.
+- Adresse e-mail alignée sur le CV fourni (.ma au lieu de .com dans l'ancien site) : confirmer qu'elle reçoit les messages.
+- Les logos FSO/OCP non récupérables dans cet environnement sont remplacés par des sigles neutres ; les logos des outils ne sont pas tous disponibles. Ajouter les fichiers officiels lorsque disponibles.
+- Certificat SNEE : image publique avec numéro étudiant masqué. Les PDF originaux des attestations ne sont pas distribués dans le dépôt. Le CV reste téléchargeable et comporte les coordonnées indiquées dans le CV fourni.
+- La vidéo de présentation CCPS est hébergée sur le site source ; la lecture externe n'a pas été vérifiée. Les vidéos locales sont des benchmarks intermédiaires, pas une démonstration finale.
+- Les images QualiVision sont explicitement conceptuelles ; les remplacer par les résultats réels. Le certificat Simulink n'a pas été fourni ; aucune vignette n'a été inventée.
+- Certaines anciennes illustrations de projet ne sont pas reprises dans les galeries publiques, afin d'éviter les mentions d'encadrement et les chiffres fictifs non identifiés. Un flyer CCPS distinct n'était pas disponible dans le lot de médias.
 
-AJOUTER UN PROJET
-  1. Ouvrez content/modele-projet.txt et copiez le bloc.
-  2. Collez-le dans content/projects.js, entre deux projets, puis remplacez les textes.
-  3. Creez le dossier assets/images/<id-du-projet>/ si vous avez des images.
+VALIDATION
+MISE À JOUR FINALE
+- Menu centré, favicon AK, contacts classiques sans formulaire.
+- Neuf illustrations vectorielles conceptuelles originales, diaporama toutes les 5 secondes avec pause, flèches, points et gestes tactiles.
+- Vérification de syntaxe et intégrité du ZIP ; test de navigation réel à réaliser après publication.
 
-MODIFIER UN TEXTE, UN LIEN OU UNE COULEUR
-  Liens, e-mail, competences, textes : content/site.js
-  Couleurs : variables en haut de style.css
-  Chaque modification : sur GitHub, ouvrez le fichier, cliquez sur le crayon, puis "Commit changes".
-  Pour envoyer plusieurs fichiers : Add file > Upload files.
-  Apres 1 a 2 minutes, verifiez dans une fenetre privee (Ctrl + Maj + N).
+Dernière mise à jour : correctifs de style, icône GitHub et liens externes des logos FSO/OCP intégrés. Les illustrations du diaporama restent vectorielles ; les visuels photoréalistes ne sont pas encore intégrés.
 
-REGLES UTILES
-  - Dans les fichiers .js, gardez les guillemets, les virgules et les accolades.
-  - Aucun nom de personne ni lien externe sans decision de votre part.
-  - Ne publiez jamais de cle, mot de passe ou donnee confidentielle (le depot est public).
+Dernière mise à jour : 9 illustrations IA WebP avec descriptions FR/EN/AR. Aucun fichier vidéo local. Dossier assets/projects/edge-ai/videos/ réservé aux futures vidéos. Les liens des logos FSO et OCP et de la vidéo CCPS restent externes.
+
+Mise à jour : diaporama compact image et texte côte à côte sur ordinateur, défilement 8 secondes, accents colorés par domaine et organisme, logos plus petits et lecteur CCPS compact. Aucun fichier vidéo local.
